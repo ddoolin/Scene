@@ -36,8 +36,36 @@
     })();
 
     (function setEventHandlers () {
-        $(".create-event-btn").click(function () {
-            // Modal
+        // Instantiate the login popover
+        $("#login").popover({
+            html: true,
+            placement: "bottom",
+            content: function () {
+                return $("#login_popover_content").html();
+            }
+        });
+
+        // Facebook login click
+        $("#facebook_login").click(function (event) {
+            console.log("Logging");
+            window.location.href = "/auth/facebook";
+        });
+
+        // Instantiate the datepickers
+        $("#from_date").datepicker({
+            minDate: new Date(),
+            altField: $("#from_date"),
+            dateFormat: "m/d/yy"
+        });
+
+        $("#to_date").datepicker({
+            minDate: new Date(),
+            altField: $("#to_date"),
+            dateFormat: "m/d/yy"
+        });
+
+        $("#create_event_modal").on("shown", function () {
+            $("#event_name").focus();
         });
     })();
 

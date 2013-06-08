@@ -40,8 +40,36 @@ window.Scene.HomeController = function () {
     })();
 
     (function setEventHandlers () {
-        $(".create-event-btn").click(function () {
-            // Modal
+        // Instantiate the login popover
+        $("#login").popover({
+            html: true,
+            placement: "bottom",
+            content: function () {
+                return $("#login_popover_content").html();
+            }
+        });
+
+        // Facebook login click
+        $("#facebook_login").click(function (event) {
+            console.log("Logging");
+            window.location.href = "/auth/facebook";
+        });
+
+        // Instantiate the datepickers
+        $("#from_date").datepicker({
+            minDate: new Date(),
+            altField: $("#from_date"),
+            dateFormat: "m/d/yy"
+        });
+
+        $("#to_date").datepicker({
+            minDate: new Date(),
+            altField: $("#to_date"),
+            dateFormat: "m/d/yy"
+        });
+
+        $("#create_event_modal").on("shown", function () {
+            $("#event_name").focus();
         });
     })();
 
@@ -86,4 +114,30 @@ window.Scene.HomeController = function () {
             });
         });
     }
+})(jQuery);;(function ($) {
+	'use strict';
+	if(!window.Scene)
+		window.Scene = {};
+	window.Scene.PhotoView = Backbone.View.extend({
+		tagName  : "div",
+		className : "photo",
+		template : _.template("<img src='<?=e.image?>'/>"),
+		initialize: function () {
+			this.listenTo(this.model, 'change', this.render);
+			this.render();
+		},
+		render: function () {
+			var position = this.model.get("position");
+			var size	 = this.model.get("size");
+			this.$el.css({
+				left   : position.x + "px",
+				top    : position.y + "px",
+				width  : size.width + "px",
+				height : size.height + "px",
+				"-webkit-transform": "rotate(" + this.model.get("rotation") + "deg)"
+			});
+			this.$el.html(this.template({e : this.model.toJSON()}));
+			return this;
+		}
+	});
 })(jQuery);
