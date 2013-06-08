@@ -15,7 +15,7 @@ window.Scene.HomeController = function () {
         // Options to pass to the map
         mapOptions = {
             center: new google.maps.LatLng(lat, lng),
-            zoom: 12,
+            zoom: 11,
             streetViewControl: false,
             panControl: false,
             mapTypeControl: true,
@@ -115,15 +115,19 @@ window.Scene.HomeController = function () {
     };
 
     this.createInfoWindow = function (marker, event) {
-        var markup = "<div class='content'>" +
-            "<img src='" + event.image + "' class='photo' />" +
-            "<a class='first-heading' href='/events/" + event._id +  "''>" + event.name +
-            "</a><div class='body-content'>" +
-            "<p class='time'>" + that.formatDate(new Date(event.duration.starttime)) +
-            " @ " + that.formatTime(new Date(event.duration.starttime)) + "</p>" +
-            "<p class='description'>" + event.description + "</p>" +
-            "</div>" +
-            "</div>";
+        var markup = "<div class='content'>";
+
+            if (event.image) {
+                markup += "<img src='" + event.image + "' class='photo' />";
+            }
+
+            markup += "<a class='first-heading' href='/events/" + event._id +  "''>" + event.name +
+                "</a><div class='body-content'>" +
+                "<p class='time'>" + that.formatDate(new Date(event.duration.starttime)) +
+                " @ " + that.formatTime(new Date(event.duration.starttime)) + "</p>" +
+                "<p class='description'>" + event.description + "</p>" +
+                "</div>" +
+                "</div>";
 
         google.maps.event.addListener(marker, "click", function () {
             window.Scene.infoWindow.setContent(markup);

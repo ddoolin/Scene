@@ -14,24 +14,35 @@
             <div class="navbar-inner">
                 <a class="brand" href="/">Scene</a>
                 <% if (user) { %>
-                    <button class="create-event-btn btn" data-toggle="modal" href="#create_event_modal">Create Event</button>
-                    <a class="logout-btn btn" href="/logout">Logout</a>
+                    <div class="button-container">
+                        <button class="create-event-btn btn" data-toggle="modal" href="#create_event_modal">Create Event</button>
+                        <a class="logout-btn btn" href="/logout">Logout</a>
+                    </div>
                 <% } else { %>
-                    <button class="register-btn btn" data-toggle="modal" href="#registration_modal">Sign Up</button>
-                    <button id="login" class="login-btn btn">Sign In</button>
-                    <div id="login_popover_content" class="hide">
-                        <% include partials/login-form %>
+                    <div class="button-container">
+                        <button class="register-btn btn" data-toggle="modal" href="#registration_modal">Sign Up</button>
+                        <button id="login" class="login-btn btn">Sign In</button>
+                        <div id="login_popover_content" class="hide">
+                            <% include partials/login-form %>
+                        </div>
                     </div>
                 <% } %>
             </div>
         </div>
-        <div id="map_canvas"></div>
-        <div id="rightclick_menu" class="rightclick-menu hide">
-            <ul>
-                <li>Create event here</li>
-                <li>Add this area to my Spots</li>
-            </ul>
-        </div>
+        <% if (user) { %>
+            <div id="map_canvas" class="logged"></div>
+            <div id="sidebar">
+                <% include partials/sidebar %>
+            </div>
+            <div id="rightclick_menu" class="rightclick-menu hide">
+                <ul>
+                    <li>Create event here</li>
+                    <li>Add this area to my Spots</li>
+                </ul>
+            </div>
+        <% } else { %>
+            <div id="map_canvas"></div>
+        <% } %>
         <% include partials/create-event %>
         <% include partials/location-finder %>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAG1ZYoDAzhL0uivXehR0_5tDLpCcLOaqQ&sensor=false"></script>

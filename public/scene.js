@@ -15,7 +15,7 @@ window.Scene.HomeController = function () {
         // Options to pass to the map
         mapOptions = {
             center: new google.maps.LatLng(lat, lng),
-            zoom: 12,
+            zoom: 11,
             streetViewControl: false,
             panControl: false,
             mapTypeControl: true,
@@ -115,15 +115,19 @@ window.Scene.HomeController = function () {
     };
 
     this.createInfoWindow = function (marker, event) {
-        var markup = "<div class='content'>" +
-            "<img src='" + event.image + "' class='photo' />" +
-            "<a class='first-heading' href='/events/" + event._id +  "''>" + event.name +
-            "</a><div class='body-content'>" +
-            "<p class='time'>" + that.formatDate(new Date(event.duration.starttime)) +
-            " @ " + that.formatTime(new Date(event.duration.starttime)) + "</p>" +
-            "<p class='description'>" + event.description + "</p>" +
-            "</div>" +
-            "</div>";
+        var markup = "<div class='content'>";
+
+            if (event.image) {
+                markup += "<img src='" + event.image + "' class='photo' />";
+            }
+
+            markup += "<a class='first-heading' href='/events/" + event._id +  "''>" + event.name +
+                "</a><div class='body-content'>" +
+                "<p class='time'>" + that.formatDate(new Date(event.duration.starttime)) +
+                " @ " + that.formatTime(new Date(event.duration.starttime)) + "</p>" +
+                "<p class='description'>" + event.description + "</p>" +
+                "</div>" +
+                "</div>";
 
         google.maps.event.addListener(marker, "click", function () {
             window.Scene.infoWindow.setContent(markup);
@@ -374,13 +378,43 @@ window.Scene.HomeController = function () {
 	if(!window.Scene)
 		window.Scene = {};
 		
+	window.Scene.PhotoDetailView = Backbone.View.extend({
+		el : "#photo_detail_modal",
+		initialize: function () {
+		},
+		show  : function(model){
+			this.model = model;
+			this.render();
+			this.$el.modal("show");
+		},
+		hide : function(){
+			this.$el.modal("hide");
+		},
+		render: function () {
+			this.$el.find(".photo_img").attr("src",this.model.get("image"));
+			this.$el.find(".comment_list")
+		}
+	});
+})(jQuery);;(function ($) {
+	'use strict';
+	if(!window.Scene)
+		window.Scene = {};
+		
 	window.Scene.PhotoView = Backbone.View.extend({
 		tagName  : "div",
 		className : "photo",
 		template : _.template("<img src='<%=e.image%>'/>"),
 		initialize: function () {
+			_.bindAll(this,"onClick");
 			this.listenTo(this.model, 'change', this.render);
 			this.render();
+			
+			this.$el.click(this.onClick);
+		},
+		onClick : function(){
+			if(window.Scene.photoDetailView){
+				window.Scene.photoDetailView.show(this.model);
+			}
 		},
 		render: function () {
 			var position = this.model.get("position");
@@ -388,7 +422,7 @@ window.Scene.HomeController = function () {
 			this.$el.css({
 				left   : position.x - size.width/2  + "%",
 				top    : position.y - size.height/2 + "%",
-				width  : size.width + "%",
+				width  : size.width  + "%",
 				height : size.height + "%",
 				"-webkit-transform": "rotate(" + this.model.get("rotation") + "deg)"
 			});

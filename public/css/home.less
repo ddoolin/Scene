@@ -1,15 +1,20 @@
 #map_canvas {
+    position: absolute;
+    margin-top: 40px;
     height: 100%;
 
+    &.logged {
+        width: 85%;
+    }
     .content {
         .photo {
             width: 50px;
             height: 50px;
+            margin-right: 10px;
         }
 
         .first-heading {
             font-size: 20px;
-            margin-left: 10px;
         }
 
         .body-content {
@@ -19,6 +24,21 @@
             .description {
                 margin-bottom: 0;
             }
+        }
+    }
+}
+#sidebar {
+    float: right;
+    display: inline;
+    padding-top: 40px;
+    background-color: #EEE;
+    border-left: 1px solid #BBB;
+    height: 100%;
+    width: 14.9%;
+
+    .tabs {
+        .attending-tab, .spots-tab {
+            background-color: white;
         }
     }
 }
@@ -139,7 +159,7 @@
     display: none;
     border: 1px solid rgba(100, 100, 100, 0.4);
     background: -webkit-gradient(radial, 100 36 ,0 , 100 -40, 120, from(#FAFAFA), to(#F1F1F1)), #F1F1F1;
-    color: grey;
+    color: #000;
 
     .address {
         margin: 1em;
