@@ -21,9 +21,10 @@
             if (!window.Scene) {
                 window.Scene = {};
             }
-			window.Scene.event = <%- JSON.stringify(event) %>;
+
+	window.Scene.event = <%- JSON.stringify(event) %>;
             window.Scene.user = <%- JSON.stringify(user) %>;
-			
+
 	        function connectWS() {
 				var socket = null;
 			    if (window.Scene.socket == null) {
@@ -44,7 +45,7 @@
 	            socket.socket.connect();
 	       		window.Scene.socket = socket;
 		    }
-			
+
             $.fn.get2dContext = function(){
 	            return this[0].getContext("2d");
             };
@@ -83,11 +84,11 @@
 					cb();
                 }
             }
-			
-		
+
+
 			$(function(){
 				connectWS();
-				
+
                 window.Scene.event.photos.forEach(function(photo){
 					var photo = new window.Scene.Photo(photo);
                     var photoView = new window.Scene.PhotoView({
@@ -95,19 +96,19 @@
 					});
                     $(".event").append(photoView.$el);
                 });
-				
-				
+
+
 				$("#photo_input_button").click(function(){
 					$("#photo_input").click();
 				});
-				
+
                 $("#photo_input").change(function() {
                     var fileReader = new FileReader();
                     var file = this.files[0];
                     console.log("Start loading image..");
-					
+
 					$("#uplode_button").attr("disabled",true);
-					
+
 					fileReader.onloadend = function(evt) {
                         if (evt.target.readyState == FileReader.DONE) {
                             resizeImage(file, evt.target.result, function(){
@@ -118,10 +119,10 @@
                     };
                     fileReader.readAsDataURL(file);
                 });
-				
+
 				///window.Scene.image_loaded
-				
-				
+
+
 				$("#use_photo").click(function(){
 					if(window.Scene.image_loaded){
 						$("#create_photo_modal").modal('hide');
@@ -130,7 +131,7 @@
 					}
 					window.Scene.image_loaded = false;
 				});
-				
+
 				$("#cancel_photo").click(function(){
 					if(window.Scene.image_loaded){
 						$("#create_photo_modal").modal('hide');
@@ -138,15 +139,15 @@
 					}
 					window.Scene.image_loaded = false;
 				});
-				
-				
+
+
 				$(".event").click(function(event){
 					if(window.Scene.wait_for_photo_location){
 						var target_url = $("#photo_preview")[0].toDataURL();
 					    if (target_url) {
 		                    window.Scene.socket.emit("Photo.create", {
 								position : {
-									x : event.offsetX / $(".event").width() * 100, 
+									x : event.offsetX / $(".event").width() * 100,
 									y : event.offsetY / $(".event").height() * 100
 								},
 								size : {
@@ -162,7 +163,7 @@
 						window.Scene.wait_for_photo_location = false;
 					}
 				});
-		
+
 			});
 		</script>
 		<style>
@@ -178,7 +179,7 @@
 				width:100%;
 				height:100%;
 			}
-			
+
 			#photo_preview
 			{
 				margin-left: auto;
@@ -190,7 +191,7 @@
     <body>
 	    <div class="navbar">
 	        <div class="navbar-inner">
-	            <a class="brand" href="#">Scene</a>
+	            <a class="brand" href="/">Scene</a>
 				<% if (user) { %>
 					<button id="photo_input_button" class="btn btn-info pull-right">Add Photo</button>
 					<input id="photo_input" class="btn btn-info pull-right hide" type="file" value="add Photo"/>
@@ -202,13 +203,13 @@
 	    </div>
 		<div class="event">
 		</div>
-		
-		
+
+
 		<div id="create_photo_modal" class="modal hide fade">
 		    <div class="modal-header">Preview
 		        <button class="close" data-dismiss="modal">x</button>
 		    </div>
-			
+
 	        <fieldset name="photo-creation">
 				<div class="modal-body">
 					<div class="canvas_container" style="width:100%;height:200px">
@@ -222,6 +223,6 @@
 				</div>
 			</fieldset>
 		</div>
-		
+
 	</body>
 </html>

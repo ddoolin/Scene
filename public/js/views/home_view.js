@@ -76,6 +76,11 @@
         // Set the default times (pretty complex, needs own method)
         hc.setDefaultTimes();
 
+        $(".hour").mousedown(function (evt) {
+            parentInput = $(evt.target).parent().siblings().get(1);
+            $(parentInput).val($(evt.target).text());
+        });
+
         $("#create_event_modal").on("shown", function () {
             $("#event_name").focus();
         });

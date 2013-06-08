@@ -12,7 +12,7 @@
     <body>
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
-                <a class="brand" href="#">Scene</a>
+                <a class="brand" href="/">Scene</a>
                 <% if (user) { %>
                     <button class="create-event-btn btn" data-toggle="modal" href="#create_event_modal">Create Event</button>
                     <a class="logout-btn btn" href="/logout">Logout</a>
@@ -26,6 +26,12 @@
             </div>
         </div>
         <div id="map_canvas"></div>
+        <div id="rightclick_menu" class="rightclick-menu hide">
+            <ul>
+                <li>Create event here</li>
+                <li>Add this area to my Spots</li>
+            </ul>
+        </div>
         <% include partials/create-event %>
         <% include partials/location-finder %>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAG1ZYoDAzhL0uivXehR0_5tDLpCcLOaqQ&sensor=false"></script>
@@ -40,6 +46,7 @@
             // Avoid polluting the global namespace
             if (!window.Scene) {
                 window.Scene = {};
+                window.Scene.infoWindow = new google.maps.InfoWindow();
             }
 
             window.Scene.events = <%- JSON.stringify(events) %>;
