@@ -1,8 +1,12 @@
 
 module.exports = function(app){
     console.log("--ROUTES--");
-		
-//    require("./site")(app);
-    
+
+	app.get("/",function(req,res){
+		res.render("index",{
+			title : "title!!!"
+		});
+	});
+
     console.log("--ROUTES END--");
 }

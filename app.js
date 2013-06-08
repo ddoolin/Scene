@@ -14,6 +14,7 @@ module.exports = function(db, callback) {
 	everyauth.everymodule.findUserById( function (userId, callback) {
 		User.findById(userId, callback);
 	});
+	
 	everyauth.facebook
 	  .appId("465294270223068")
 	  .appSecret("64a8f37531cb44f82d1e3ea188544f66")
@@ -128,10 +129,6 @@ module.exports = function(db, callback) {
         res.setHeader('Content-Type', 'application/json');
         next();
     });
-
-	app.get("/",function(req,res){
-		res.send(200,"shasgads");
-	});
 
     console.log("ROUTE_START");
     require('./routes')(app);

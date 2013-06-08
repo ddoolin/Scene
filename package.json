@@ -1,5 +1,5 @@
 {
-  "name": "Collage",
+  "name": "Scene",
   "version": "0.0.1",
   "private": true,
   "engines": {
@@ -17,5 +17,5 @@
 	"express-mongoose" : "0.1.0",
     "mongoose-schema-extend": "*",
 	"everyauth" : "latest"
-  },
+  }
 }

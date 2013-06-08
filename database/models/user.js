@@ -10,10 +10,13 @@ module.exports = function(){
 		auth_service : String,
 		auth_id : String,
 		auth_token : String,
-		profile : String
+		profile : String,
+		created_events : [{ type: ObjectId, ref: 'Event' }],
+		attened_events : [{ type: ObjectId, ref: 'Event' }]
 	});
-
+	
 	User.methods = {
+		
 	};
 	
 	User.statics.middleware = {
