@@ -11,19 +11,19 @@
 			_.bindAll(this,"onClick","onMoved");
 			
 			this.listenTo(this.model, 'change', this.render);
-			this.render();
 			
 			this.$el.click(this.onClick);
 			this.$el.draggable({cursor: "crosshair"})
 					.on("drag",this.onMoved)
 					.css({"position":"absolute"});
 			
+			this.$el.html(this.template({e : this.model.toJSON()}));
 			this.render();
 		},
 		onMoved : function(){
 			this.model.set("position",{
-				x : this.$el.position().left,
-				y : this.$el.position().top
+				x : this.$el.position().left / $(".event").width() * 100,
+				y : this.$el.position().top / $(".event").height() * 100
 			});
 			window.Scene.socket.emit("Photo.update",this.model.toJSON());
 		},
@@ -42,7 +42,6 @@
 				height : size.height + "%",
 				"-webkit-transform": "rotate(" + this.model.get("rotation") + "deg)"
 			});
-			this.$el.html(this.template({e : this.model.toJSON()}));
 			return this;
 		}
 	});

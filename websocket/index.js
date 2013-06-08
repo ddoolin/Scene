@@ -101,9 +101,8 @@ module.exports = function(server){
 			socket.broadcast.to(socket.event).emit('Photo.update', photo.toJSON() );
 			//socket.emit('Photo.update', photo.toJSON());
 
-//			delete data._id;
-			console.log(data);
-			photo.update({ _id: photo._id }, {position:data.position} , function (err, numberAffected, raw) {
+			delete data._id;
+			Photo.update({ _id: photo._id }, data, function (err, numberAffected, raw) {
 				if (err) console.log(err);
 			});
 		});
