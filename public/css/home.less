@@ -95,3 +95,60 @@
         }
     }
 }
+#location_finder_popup {
+    .rounded-corners(5px);
+    .drop-shadow(5px, 8px, 25px, -3px, 0.5);
+    position: absolute;
+    top: 75%;
+    left: 60%;
+    display: none;
+    border: 1px solid rgba(100, 100, 100, 0.4);
+    background: -webkit-gradient(radial, 100 36 ,0 , 100 -40, 120, from(#FAFAFA), to(#F1F1F1)), #F1F1F1;
+    color: grey;
+
+    .address {
+        margin: 1em;
+        width: 27em;
+    }
+
+    .buttons {
+        position: relative;
+        margin: 0em 1em 1em 1em;
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            left: -10px;
+        }
+
+        .cancel-finder, .use-address {
+            margin-left: 0.5em;
+        }
+
+        .movable-info {
+            display: inline;
+            position: absolute;
+            right: 0em;
+            bottom: -0.3em;
+
+            .help {
+                width: 37px;
+                margin-bottom: 2px;
+                cursor: pointer;
+                text-decoration: underline;
+            }
+
+            .tooltip {
+                width: 275px;
+            }
+
+            .info {
+                margin-right: 0.3em;
+            }
+
+            .info, .icon-move, .help {
+                opacity: 0.6;
+            }
+        }
+    }
+}

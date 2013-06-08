@@ -1,7 +1,7 @@
 var _ = require("underscore");
 var async = require("async");
 module.exports = function(mongoose){
-	
+
 	var Schema = mongoose.Schema;
 	var ObjectId = Schema.ObjectId;
 	var Event = new Schema({
@@ -13,7 +13,7 @@ module.exports = function(mongoose){
 		},
 		location : {
 			longitude : { type:Number },
-			latitude  : { type:Number },
+			latitude  : { type:Number }
 		},
 		address : String,
 		description : String,
@@ -41,8 +41,8 @@ module.exports = function(mongoose){
 			return mongoose.models.Event.find({},cb);
 		},
 		findNearBy : function(spot,distance,cb){
-		    return mongoose.models.Event.find({location : { 
-					$near : [spot.longitude, 
+		    return mongoose.models.Event.find({location : {
+					$near : [spot.longitude,
 							 spot.latitude],
 			    	$maxDistance : distance
 				}
