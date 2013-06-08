@@ -7,6 +7,13 @@ module.exports = function(mongoose){
 	var Event = new Schema({
 		_creator : { type: ObjectId, ref: 'User' },
 		name : String,
+		duration : {
+			starttime : { type:Date },
+			endtime : { type:Date }
+		},
+		location : {
+			
+		},
 		description : String,
 		image : String
 	});
