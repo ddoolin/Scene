@@ -1,4 +1,6 @@
 var mongoose = require("mongoose");
+var async = require("async");
+
 module.exports = function(){
 	var Schema = mongoose.Schema;
 	var ObjectId = Schema.ObjectId;
@@ -21,7 +23,22 @@ module.exports = function(){
 	});
 	
 	User.methods = {
-		
+		populateSpots : function(cb){
+			console.log("populateSpots");
+			var self = this;
+			var Event = mongoose.models.Event;
+			var out = this.toJSON();
+			
+			async.each(out.spots, function(spot,callback){
+				Event.findNearBy(spot,0.01,function(err,events){
+					spot.events = events;
+					callback(err);
+				});
+			}, function(err){
+				console.log(out);
+				cb(err,out);
+			});
+		}
 	};
 	
 	User.statics.middleware = {

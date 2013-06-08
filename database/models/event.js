@@ -19,11 +19,10 @@ module.exports = function(mongoose){
 		description : String,
 		image : String
 	});
-	
 	Event.index ({
 		location : "2d"
 	});
-	
+
 	Event.methods = {
 		populatePhotos : function(cb){
 			var self = this;
@@ -37,23 +36,19 @@ module.exports = function(mongoose){
 			});
 		}
 	};
-	
 	Event.statics = {
 		findAll : function(cb){
 			return mongoose.models.Event.find({},cb);
 		},
 		findNearBy : function(spot,distance,cb){
-			console.log(arguments);
 		    return mongoose.models.Event.find({location : { 
 					$near : [spot.longitude, 
 							 spot.latitude],
-			    	$maxDistance : distance/68.91
+			    	$maxDistance : distance
 				}
 			},cb);
 		}
 	}
-	
-	
 	Event.statics.middleware = {
 		findById : function(req,res,next){
 			var id = req.param("id");
