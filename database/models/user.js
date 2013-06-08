@@ -12,10 +12,11 @@ module.exports = function(){
 		auth_token : String,
 		profile : String,
 		created_events : [{ type: ObjectId, ref: 'Event' }],
-		attened_events : [{ type: ObjectId, ref: 'Event' }],
+		attended_events : [{ type: ObjectId, ref: 'Event' }],
 		spots : [{ 
 			longitude : {type:Number},
-			latitude  : {type:Number}
+			latitude  : {type:Number},
+			address : String
 		}]
 	});
 	

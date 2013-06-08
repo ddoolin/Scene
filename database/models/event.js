@@ -13,10 +13,15 @@ module.exports = function(mongoose){
 		},
 		location : {
 			longitude : {type:Number},
-			latitude  : {type:Number}
+			latitude  : {type:Number},
 		},
+		address : String,
 		description : String,
 		image : String
+	});
+	
+	Event.index ({
+		location : "2d"
 	});
 	
 	Event.methods = {
@@ -33,9 +38,21 @@ module.exports = function(mongoose){
 		}
 	};
 	
-	Event.statics.findAll = function(cb){
-		return mongoose.models.Event.find({},cb);
-	};
+	Event.statics = {
+		findAll : function(cb){
+			return mongoose.models.Event.find({},cb);
+		},
+		findNearBy : function(spot,distance,cb){
+			console.log(arguments);
+		    return mongoose.models.Event.find({location : { 
+					$near : [spot.longitude, 
+							 spot.latitude],
+			    	$maxDistance : distance/68.91
+				}
+			},cb);
+		}
+	}
+	
 	
 	Event.statics.middleware = {
 		findById : function(req,res,next){
@@ -52,7 +69,6 @@ module.exports = function(mongoose){
 	};
 
 	Event = mongoose.model('Event', Event);
-	
 	return Event;
 }
 
