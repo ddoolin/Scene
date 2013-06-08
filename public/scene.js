@@ -25,7 +25,7 @@ window.Scene.HomeController = function () {
         }
     })();
 
-    (function connectWS() {
+    (function connectWS () {
         var socket = window.socket = null;
 
         if (socket === null) {
@@ -37,6 +37,12 @@ window.Scene.HomeController = function () {
 
         socket.socket.connect();
         window.socket = socket;
+    })();
+
+    (function setEventHandlers () {
+        $(".create-event-btn").click(function () {
+            // Modal
+        });
     })();
 
     function createMap (position) {
