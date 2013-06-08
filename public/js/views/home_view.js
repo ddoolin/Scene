@@ -1,10 +1,5 @@
 (function ($) {
 
-    // Variable decs
-    var scene = window.Scene,
-        hc = new scene.HomeController(),
-        infoWindow;
-
     (function getLocation () {
         if (Modernizr.geolocation) {
             if (localStorage.getItem("currentLatitude") && localStorage.getItem("currentLongitude")) {
@@ -63,7 +58,22 @@
         };
 
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-
         window.Scene.map = map;
+
+        populateMap();
+    }
+
+    function populateMap () {
+        var events = window.Scene.events;
+
+        _.each(window.Scene.events, function (event) {
+            var position = new google.maps.LatLng(event.location.latitude, event.location.longitude),
+                  marker = new google.maps.Marker({
+                      map: window.Scene.map,
+                      position: position,
+                      animation: google.maps.Animation.DROP,
+                      title: event.name
+            });
+        });
     }
 })(jQuery);

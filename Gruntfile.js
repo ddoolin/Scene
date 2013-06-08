@@ -18,8 +18,7 @@ module.exports = function (grunt) {
                 options: {
                     separator: ";"
                 },
-                src: ["public/js/application.js",
-                        "public/js/controllers/*.js",
+                src: ["public/js/controllers/*.js",
                         "public/js/form-validators/*.js",
                         "public/js/views/*.js"],
                 dest: "public/scene.js"

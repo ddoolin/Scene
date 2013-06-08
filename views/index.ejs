@@ -22,8 +22,13 @@
         <script src="/js/vendor/bootstrap.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
-			window.Scene.user = <%-JSON.stringify(user)%>;
+            // Avoid polluting the global namespace
+            if (!window.Scene) {
+                window.Scene = {};
+            }
+
             window.Scene.events = <%- JSON.stringify(events) %>;
+            window.Scene.user = <%- JSON.stringify(user) %>;
         </script>
         <script src="/scene.min.js"></script>
     </body>
