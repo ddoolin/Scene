@@ -22,6 +22,7 @@
 		<script src="/socket.io/socket.io.js"></script>
 		<title>Collage</title>
     	<script>
+			var event  = <%-JSON.stringify(event)%>;
 			var socket = null;
 	        function connectWS() {
 	            if (socket == null) {
@@ -42,15 +43,9 @@
 
 		</style>
 	</head>
-	
     <body>
-		<div class="navbar">
-			<div class="navbar-inner">
-		  		<a class="brand" href="#"><%=event.name%></a>
-		  	</div>
-		</div>
 		<div class="event">
-			<%=JSON.stringify(event)%>
+			<input class="btn btn-info" type="file" value="add Photo"/>
 		</div>
 	</body>
 </html>

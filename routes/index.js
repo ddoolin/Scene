@@ -8,7 +8,8 @@ module.exports = function(app){
 	app.get("/",function(req,res){
 		Event.findAll(function(err,events){
 			res.render("index",{
-				events : events
+				events : events,
+				user : req.user
 			});
 		});
 	});
