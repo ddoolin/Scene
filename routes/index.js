@@ -12,11 +12,15 @@ module.exports = function(app){
 			var user = req.user;
 			if(user){
 				user = new User(user);
-				user.populateSpots(function(err,user){
-					res.render("index" + (req.useragent.isMobile?"-mobile":""),{
-						events : events,
-						user   : user
-					});
+	
+				user.populate("attended_events",function(){
+					console.log(user);
+					user.populateSpots(function(err,user){
+										res.render("index" + (req.useragent.isMobile?"-mobile":""),{
+											events : events,
+											user   : user
+										});
+									});
 				});
 			} else {
 				res.render("index" + (req.useragent.isMobile?"-mobile":""),{

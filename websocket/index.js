@@ -12,11 +12,9 @@ module.exports = function(server){
 	var io = socketIO.listen(server);
 	io.of('/home').on('connection', function (socket) {
 		socket.on('message', function (data) {
-			
-        });
-    	socket.on('disconnect', function () {
-        
 		});
+    	socket.on('disconnect', function () {
+        });
 		socket.on("User.addSpot",function(data){
 			var User = mongoose.models.User;
 			//data.user --> user id
@@ -32,6 +30,22 @@ module.exports = function(server){
 					});
 				});
 			}
+		});
+		socket.on("User.attendEvent",function(data){
+			//data.user -> user id
+			//data.event -> event id
+			var User = mongoose.models.User;
+			if(data && data.user && data.event){
+				User.findById(data.user,function(err,user){
+					if(err || !user){
+						console.log(err,user);
+					}
+					user.attended_events.push(data.event);
+					user.save(function(err,user){
+						console.log(err,user);
+					});
+				});
+			}	
 		});
 		socket.on("Event.create",function(data){
 			var Event = mongoose.models.Event;
