@@ -1,14 +1,36 @@
-module.exports = function(app){
-    console.log("--ROUTES--");
+var mongoose = require("mongoose");
 
-	app.get("/",function(req,res){
-		res.render("index",{
-			title : "title!!!"
-		});
+module.exports = function(app){
+	console.log(" --Events");
+	var Event = mongoose.models.Event;
+	
+	app.post("/events",function(req,res){
+		if (req.user) {
+			var event = new Event({
+				_creator : req.user.id,
+				name : req.param("name"),
+				duration : {
+					starttime : req.param("duration.starttime"),
+					endtime   : req.param("duration.endtime"),
+				},
+				location : {
+					longitude : req.param("location.longitude"),
+					latitude  : req.param("location.latitude"),
+				},
+				description : req.param("description"),
+				image : req.param("image")
+			});
+			event.save(function(err,event){
+				res.redirect("/events/",event.id);
+			});
+		} else {	
+			res.redirect("/auth/facebook");
+		}
 	});
 	
-	require("./user")(app);
-	require("./event")(app);
-
-    console.log("--ROUTES END--");
+	app.get("/events/:id",Event.middleware.findById,function(req,res){
+		res.render("event/index",{
+			event : req.event
+		});
+	});
 }

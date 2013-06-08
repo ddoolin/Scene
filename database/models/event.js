@@ -9,10 +9,11 @@ module.exports = function(mongoose){
 		name : String,
 		duration : {
 			starttime : { type:Date },
-			endtime : { type:Date }
+			endtime   : { type:Date }
 		},
 		location : {
-			
+			longitude : {type:Number},
+			latitude  : {type:Number}
 		},
 		description : String,
 		image : String
@@ -31,7 +32,7 @@ module.exports = function(mongoose){
 			});
 		}
 	};
-	
+
 	Event = mongoose.model('Event', Event);
 	
 	return Event;

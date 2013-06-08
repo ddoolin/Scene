@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+
+		<script>
+		/*
+		_.templateSettings = {
+			escape		: /<\?-([\s\S]+?)\?>/g,
+			evaluate	: /<\?([\s\S]+?)\?>/g,
+			interpolate : /<\?=([\s\S]+?)\?>/g
+		};
+		Backbone.sync = function(method, model) {
+			//alert(method + ": " + JSON.stringify(model));
+			//console.log(model);
+			socket.emit(model.modelName + ".update", model.toJSON());
+		};
+		*/
+		
+		</script>
+		<script src="/socket.io/socket.io.js"></script>
+		<title>Collage</title>
+    	<script>
+			var socket = null;
+	        function connectWS() {
+	            if (socket == null) {
+	                socket = io.connect();
+	                socket.on("connect", function() {
+	                    socket.emit("joinRoom",{event:"<%=event._id%>"});
+	                });
+	                socket.on('message', function(data) {});
+	                socket.on('disconnect', function() {});
+	  			}
+	            socket.socket.connect();
+	        }
+			$(function(){
+				connectWS();
+			});
+		</script>
+		<style>
+
+		</style>
+	</head>
+	
+    <body>
+		<div class="navbar">
+			<div class="navbar-inner">
+		  		<a class="brand" href="#"><%=event.name%></a>
+		  	</div>
+		</div>
+		<div class="event">
+			<%=JSON.stringify(event)%>
+		</div>
+	</body>
+</html>

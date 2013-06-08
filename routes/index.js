@@ -1,6 +1,6 @@
 
 module.exports = function(app){
-    console.log("--ROUTES--");
+    console.log("  --ROUTES--  ");
 
 	app.get("/",function(req,res){
 		res.render("index",{
@@ -10,6 +10,6 @@ module.exports = function(app){
 	
 	require("./user")(app);
 	require("./event")(app);
-
-    console.log("--ROUTES END--");
+	
+	console.log("  --ROUTES END--  ");
 }
