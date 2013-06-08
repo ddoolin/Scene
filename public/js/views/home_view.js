@@ -7,8 +7,17 @@
 
     (function getLocation () {
         if (Modernizr.geolocation) {
-            if (localStorage.getItem("currentPosition")) {
-                createMap(localStorage.getItem("currentPosition"));
+            if (localStorage.getItem("currentLatitude") && localStorage.getItem("currentLongitude")) {
+                var latitude = localStorage.getItem("currentLatitude"),
+                      longitude = localStorage.getItem("currentLongitude"),
+                      position = {
+                          coords: {
+                              latitude: latitude,
+                              longitude: longitude
+                          }
+                      };
+
+                createMap(position);
             } else {
                 navigator.geolocation.getCurrentPosition(createMap);
             }
@@ -32,7 +41,9 @@
     })();
 
     function createMap (position) {
-        localStorage.setItem("currentPosition", position);
+        localStorage.setItem("currentLatitude", position.coords.latitude);
+        localStorage.setItem("currentLongitude", position.coords.longitude);
+
         var lat = position.coords.latitude,
               lng = position.coords.longitude,
               map,
