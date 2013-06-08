@@ -15,10 +15,10 @@
 			var position = this.model.get("position");
 			var size	 = this.model.get("size");
 			this.$el.css({
-				left   : position.x - size.width/2  + "px",
-				top    : position.y - size.height/2 + "px",
-				width  : size.width + "px",
-				height : size.height + "px",
+				left   : position.x - size.width/2  + "%",
+				top    : position.y - size.height/2 + "%",
+				width  : size.width + "%",
+				height : size.height + "%",
 				"-webkit-transform": "rotate(" + this.model.get("rotation") + "deg)"
 			});
 			this.$el.html(this.template({e : this.model.toJSON()}));

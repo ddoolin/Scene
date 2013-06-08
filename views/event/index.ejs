@@ -146,12 +146,12 @@
 					    if (target_url) {
 		                    window.Scene.socket.emit("Photo.create", {
 								position : {
-									x : event.offsetX,
-									y : event.offsetY
+									x : event.offsetX / $(".event").width() * 100, 
+									y : event.offsetY / $(".event").height() * 100
 								},
 								size : {
-									width : $("#photo_preview").width(),
-									height : $("#photo_preview").height()
+									width : $("#photo_preview").width() / $(".event").width() * 100,
+									height : $("#photo_preview").height() / $(".event").height() * 100
 								},
 		                        image: target_url
 		                    });
@@ -174,8 +174,16 @@
 			.event .photo{
 				position:absolute;
 			}
+			.event .photo img{
+				width:100%;
+				height:100%;
+			}
 			
-			#create_photo_modal{
+			#photo_preview
+			{
+				margin-left: auto;
+				margin-right: auto;
+				display: block;
 			}
 		</style>
 	</head>
@@ -207,7 +215,7 @@
 						<canvas id="photo_preview">
 						</canvas>
 					</div>
-					<div>
+					<div style="margin-left:auto;margin-right:auto">
 						<button id="use_photo" class="btn btn-info">Use</button>
 						<button id="cancel_photo" class="btn btn-danger">Cancel</button>
 					</div>
