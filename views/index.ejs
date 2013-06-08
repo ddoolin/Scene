@@ -22,10 +22,8 @@
         <script src="/js/vendor/bootstrap.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
-            var events = <%- JSON.stringify(events) %>;
-            console.log(events);
-			
 			window.Scene.user = <%-JSON.stringify(user)%>;
+            window.Scene.events = <%- JSON.stringify(events) %>;
         </script>
         <script src="/scene.min.js"></script>
     </body>

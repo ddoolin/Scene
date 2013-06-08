@@ -28,6 +28,7 @@ module.exports = function (grunt) {
         uglify: {
             scene: {
                 options: {
+                    debug: true,
                     beautify: true,
                     mangle: { toplevel: true },
                     squeeze: { dead_code: false },
