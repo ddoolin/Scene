@@ -21,9 +21,10 @@
 			this.render();
 		},
 		onMoved : function(){
+			var size = this.model.get("size");
 			this.model.set("position",{
-				x : this.$el.position().left / $(".event").width() * 100,
-				y : this.$el.position().top / $(".event").height() * 100
+				x : (this.$el.position().left) / $(".event").width() * 100,
+				y : (this.$el.position().top ) / $(".event").height() * 100
 			});
 			window.Scene.socket.emit("Photo.update",this.model.toJSON());
 		},
@@ -36,8 +37,8 @@
 			var position = this.model.get("position");
 			var size	 = this.model.get("size");
 			this.$el.css({
-				left   : position.x - size.width/2  + "%",
-				top    : position.y - size.height/2 + "%",
+				left   : position.x+ "%",
+				top    : position.y+ "%",
 				width  : size.width  + "%",
 				height : size.height + "%",
 				"-webkit-transform": "rotate(" + this.model.get("rotation") + "deg)"

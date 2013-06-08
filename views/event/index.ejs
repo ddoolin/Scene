@@ -136,15 +136,31 @@
 					if(window.Scene.wait_for_photo_location){
 						var target_url = $("#photo_preview")[0].toDataURL();
 					    if (target_url) {
+							var size = {
+								width  : $("#photo_preview").width()  / $(".event").width() * 100,
+								height : $("#photo_preview").height() / $(".event").height() * 100
+							};
+							var maxSize = 17;
+							if(size.width > size.height) {
+								if(size.width > maxSize){
+									var scale = maxSize / size.width;
+									size.width *= scale;
+									size.height *= scale;
+								}
+							} else {
+								if(size.height > maxSize){
+									var scale = maxSize / size.height;
+									size.width *= scale;
+									size.height *= scale;
+								}
+							}
+							
 		                    window.Scene.socket.emit("Photo.create", {
 								position : {
 									x : event.offsetX / $(".event").width() * 100,
 									y : event.offsetY / $(".event").height() * 100
 								},
-								size : {
-									width : $("#photo_preview").width() / $(".event").width() * 100,
-									height : $("#photo_preview").height() / $(".event").height() * 100
-								},
+								size : size,
 		                        image: target_url
 		                    });
 		                    target_url = null;
