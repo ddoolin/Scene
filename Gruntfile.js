@@ -9,7 +9,7 @@ module.exports = function (grunt) {
                     yuicompress: true
                 },
                 files: {
-                    "public/scene.css": ["public/css/main.less"]
+                    "public/scene.min.css": ["public/css/main.less"]
                 }
             }
         },
@@ -19,10 +19,9 @@ module.exports = function (grunt) {
                     separator: ";"
                 },
                 src: ["public/js/application.js",
-                      "public/js/vendor/*.js",
-                      "public/js/controllers/*.js",
-                      "public/js/form-validators/*.js",
-                      "public/js/views/*.js"],
+                        "public/js/controllers/*.js",
+                        "public/js/form-validators/*.js",
+                        "public/js/views/*.js"],
                 dest: "public/scene.js"
             }
         },
