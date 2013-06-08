@@ -2,7 +2,7 @@
     <div class="modal-header">New Event
         <button class="close" data-dismiss="modal">x</button>
     </div>
-    <form id="new_event_form" class="form-horizontal">
+    <form id="create_event_form" class="form-horizontal">
         <fieldset name="event-creation">
             <div class="modal-content">
                 <div class="control-group">
@@ -10,19 +10,21 @@
                     <div class="controls">
                         <input type="text" id="event_name" class="event-name" required="required" title="event-name" placeholder="e.g. AngelHack Seoul 2013" />
                         <p class="event-name-comment text-error"></p>
+                    </div>
                 </div>
                 <div class="control-group">
                     <label class="description control-label">Event Description</label>
                     <div class="controls">
-                        <input type="text" id="event_description" class="event-description" required="required" title="event-description" placeholder="e.g. 24-hours of hacking goodness for cool prizes!" />
+                        <textarea id="event_description" class="event-description" required="required" title="event-description" placeholder="e.g. 24-hours of hacking goodness for cool prizes!"></textarea>
                         <p class="event-description-comment text-error"></p>
+                    </div>
                 </div>
                 <div class="location-control-group control-group">
                     <label class="location control-label">Where</label>
                     <div class="controls">
                         <input type="text" required="required" id="event_location" class="event-location" title="event-location" placeholder="서초구 잠원동 새롬빌딩" />
                         <div class="button-container">
-                            <span class="or-divider">- or -
+                            <span class="or-divider">- or -</span>
                             <button id="find_location" class="btn">Find on map</button>
                         </div>
                         <p class="event-location-comment text-error"></p>

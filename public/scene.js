@@ -2,7 +2,69 @@ window.Scene.HomeController = function () {
 
     // Variable decs
     var that = this;
+
+    this.createMap = function (position) {
+        localStorage.setItem("currentLatitude", position.coords.latitude);
+        localStorage.setItem("currentLongitude", position.coords.longitude);
+
+        var lat = position.coords.latitude,
+              lng = position.coords.longitude,
+              map,
+              mapOptions;
+
+        // Options to pass to the map
+        mapOptions = {
+            center: new google.maps.LatLng(lat, lng),
+            zoom: 12,
+            streetViewControl: false,
+            panControl: false,
+            mapTypeControl: true,
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.LEFT_CENTER
+            },
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        window.Scene.map = map;
+
+        that.populateMap();
+    };
+
+    this.populateMap = function () {
+        var events = window.Scene.events;
+
+        _.each(window.Scene.events, function (event) {
+            var position = new google.maps.LatLng(event.location.latitude, event.location.longitude),
+                  marker = new google.maps.Marker({
+                      map: window.Scene.map,
+                      position: position,
+                      animation: google.maps.Animation.DROP,
+                      title: event.name
+            });
+        });
+    };
+
+    this.setDefaultTimes = function () {
+        var date = new Date(),
+            hour = date.getHours() + 1;
+
+        $("#from_date").val((date.getMonth() + 1) + "/" + ((hour >= 24) ? date.getDate() + 1 : date.getDate()) + "/" + date.getFullYear());
+        $("#to_date").val((date.getMonth() + 1) + "/" + (((hour + 1) >= 24) ? date.getDate() + 1 : date.getDate()) + "/" + date.getFullYear());
+
+        $("#from_time").val(((hour > 12) ? hour - 12 : hour) + ":00 " + ((hour === 24 || hour < 12) ? "am" : "pm"));
+        $("#to_time").val(
+            (((hour + 1) > 12)
+            ? ((hour + 1) > 24)
+                ? Math.ceil((hour + 1) / 2) - 12
+                : (hour + 1) - 12
+            : (hour + 1)) + ":00 " + (((hour + 1) >= 24 || (hour + 1) < 12) ? "am" : "pm")
+        );
+    }
 };;(function ($) {
+
+    var scene = window.Scene,
+          hc = new scene.HomeController();
 
     (function getLocation () {
         if (Modernizr.geolocation) {
@@ -16,9 +78,9 @@ window.Scene.HomeController = function () {
                           }
                       };
 
-                createMap(position);
+                hc.createMap(position);
             } else {
-                navigator.geolocation.getCurrentPosition(createMap);
+                navigator.geolocation.getCurrentPosition(hc.createMap);
             }
         } else {
             console.log("Geolocation API not supported");
@@ -49,12 +111,6 @@ window.Scene.HomeController = function () {
             }
         });
 
-        // Facebook login click
-        $("#facebook_login").click(function (event) {
-            console.log("Logging");
-            window.location.href = "/auth/facebook";
-        });
-
         // Instantiate the datepickers
         $("#from_date").datepicker({
             minDate: new Date(),
@@ -68,52 +124,22 @@ window.Scene.HomeController = function () {
             dateFormat: "m/d/yy"
         });
 
+        // Set the focus handler
+        $("#from_time, #to_time").focus(function (event) {
+            $(event.target).siblings(".hour-select").show();
+        }).keydown(function (event) {
+            $(event.target).siblings(".hour-select").hide();
+        }).blur(function (event) {
+            $(event.target).siblings(".hour-select").hide();
+        });
+
+        // Set the default times (pretty complex, needs own method)
+        hc.setDefaultTimes();
+
         $("#create_event_modal").on("shown", function () {
             $("#event_name").focus();
         });
     })();
-
-    function createMap (position) {
-        localStorage.setItem("currentLatitude", position.coords.latitude);
-        localStorage.setItem("currentLongitude", position.coords.longitude);
-
-        var lat = position.coords.latitude,
-              lng = position.coords.longitude,
-              map,
-              mapOptions;
-
-        // Options to pass to the map
-        mapOptions = {
-            center: new google.maps.LatLng(lat, lng),
-            zoom: 12,
-            streetViewControl: false,
-            panControl: false,
-            mapTypeControl: true,
-            zoomControlOptions: {
-                position: google.maps.ControlPosition.LEFT_CENTER
-            },
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-
-        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-        window.Scene.map = map;
-
-        populateMap();
-    }
-
-    function populateMap () {
-        var events = window.Scene.events;
-
-        _.each(window.Scene.events, function (event) {
-            var position = new google.maps.LatLng(event.location.latitude, event.location.longitude),
-                  marker = new google.maps.Marker({
-                      map: window.Scene.map,
-                      position: position,
-                      animation: google.maps.Animation.DROP,
-                      title: event.name
-            });
-        });
-    }
 })(jQuery);;(function ($) {
 	'use strict';
 	if(!window.Scene)
