@@ -70,14 +70,14 @@ window.Scene.HomeController = function () {
         formattedTime = hour + ":" + (((minutes < 10) ? "0" : "") + minutes) + " " + meridiem;
 
         return formattedTime;
-    }
+    };
 
     this.createMarker = function (position) {
         var position = (position == undefined) ? new google.maps.LatLng(37.525, 127.000) : new google.maps.LatLng(position[0], position[1]),
-            marker;
+              marker;
 
         marker = new google.maps.Marker({
-            map: map,
+            map: window.Scene.map,
             position: position,
             draggable: true,
             animation: google.maps.Animation.DROP
@@ -253,7 +253,8 @@ window.Scene.HomeController = function () {
                 longitude: results[0].geometry.location.lng()
             };
 
-            window.Scene.socket.emit("Event.create", event);
+            window.socket.emit("Event.create", event);
+            $("#create_event_modal").modal("hide");
         });
     };
 };

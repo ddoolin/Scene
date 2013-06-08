@@ -70,14 +70,14 @@ window.Scene.HomeController = function () {
         formattedTime = hour + ":" + (((minutes < 10) ? "0" : "") + minutes) + " " + meridiem;
 
         return formattedTime;
-    }
+    };
 
     this.createMarker = function (position) {
         var position = (position == undefined) ? new google.maps.LatLng(37.525, 127.000) : new google.maps.LatLng(position[0], position[1]),
-            marker;
+              marker;
 
         marker = new google.maps.Marker({
-            map: map,
+            map: window.Scene.map,
             position: position,
             draggable: true,
             animation: google.maps.Animation.DROP
@@ -253,7 +253,8 @@ window.Scene.HomeController = function () {
                 longitude: results[0].geometry.location.lng()
             };
 
-            window.Scene.socket.emit("Event.create", event);
+            window.socket.emit("Event.create", event);
+            $("#create_event_modal").modal("hide");
         });
     };
 };;(function ($) {
@@ -290,6 +291,9 @@ window.Scene.HomeController = function () {
             socket.on("connect", function() {});
             socket.on('message', function(data) {});
             socket.on('disconnect', function() {});
+            socket.on("Event.create", function (event) {
+                hc.createColoredMarker("green", [event.location.latitude, event.location.longitude]);
+            });
         }
 
         socket.socket.connect();
@@ -364,10 +368,10 @@ window.Scene.HomeController = function () {
 			var position = this.model.get("position");
 			var size	 = this.model.get("size");
 			this.$el.css({
-				left   : position.x - size.width/2  + "px",
-				top    : position.y - size.height/2 + "px",
-				width  : size.width + "px",
-				height : size.height + "px",
+				left   : position.x - size.width/2  + "%",
+				top    : position.y - size.height/2 + "%",
+				width  : size.width + "%",
+				height : size.height + "%",
 				"-webkit-transform": "rotate(" + this.model.get("rotation") + "deg)"
 			});
 			this.$el.html(this.template({e : this.model.toJSON()}));

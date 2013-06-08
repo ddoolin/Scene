@@ -32,6 +32,9 @@
             socket.on("connect", function() {});
             socket.on('message', function(data) {});
             socket.on('disconnect', function() {});
+            socket.on("Event.create", function (event) {
+                hc.createColoredMarker("green", [event.location.latitude, event.location.longitude]);
+            });
         }
 
         socket.socket.connect();
