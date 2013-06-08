@@ -4,6 +4,8 @@ var express = require('express'),
     app = express();
 
 var everyauth = require('everyauth');
+var useragent = require("express-useragent");
+
 
 module.exports = function(db, callback) {
     console.log("APP_START");
@@ -99,6 +101,7 @@ module.exports = function(db, callback) {
         app.use(express.favicon());
         app.use(express.logger('dev'));
 		app.use(express.cookieParser());
+		app.use(useragent.express());
 		app.use(express.session({
 	       	secret: "d4SPw4mz2",
 	        cookie: {

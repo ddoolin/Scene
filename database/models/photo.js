@@ -8,12 +8,12 @@ module.exports = function(mongoose)
 		_creator : { type: ObjectId, ref: 'User' },
 		_event : { type: ObjectId, ref: 'Event' },
 		size : {
-			width  : {type : Number},
-			height : {type : Number}
+			width  : {type : Number, default:50},
+			height : {type : Number, default:50}
 		},
 		position : {
-			x : {type : Number},
-			y : {type : Number}
+			x : {type : Number, default : 0},
+			y : {type : Number, default : 0}
 		},
 		rotation : { type : Number,default : 0 },
 		createdTime : { type: Date, default: Date.now },

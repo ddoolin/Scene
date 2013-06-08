@@ -1,5 +1,4 @@
 var mongoose = require("mongoose");
-
 module.exports = function(app){
 	console.log(" --Events");
 	var Event = mongoose.models.Event;
@@ -33,14 +32,9 @@ module.exports = function(app){
 
 	app.get("/events/:id",Event.middleware.findById,function(req,res){
 		var event = new Event(req.event);
-		
-		Event.findNearBy({ longitude: 102, latitude: 45 },100,function(err,events){
-			console.log(err,events);
-		});
-		
-		
 		event.populatePhotos(function(err,event){
 			res.render("event/index",{
+				user : req.user?req.user:null,
 				event : event
 			});
 		});

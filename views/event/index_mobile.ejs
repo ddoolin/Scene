@@ -5,8 +5,7 @@
         <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
 
         <link rel="stylesheet" href="/css/vendor/bootstrap.min.css" />
-        <link rel="stylesheet" href="/css/vendor/bootstrap-responsive.min.css" />
-		<link rel="stylesheet" href="/scene.min.css" />
+        <link rel="stylesheet" href="/scene.min.css" />
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
         <script src="/js/vendor/modernizr.min.js"></script>
@@ -18,11 +17,9 @@
 		<script src="/socket.io/socket.io.js"></script>
 		<title>Scene</title>
     	<script>
-            if (!window.Scene) {
-                window.Scene = {};
-            }
-			window.Scene.event = <%- JSON.stringify(event) %>;
-            window.Scene.user = <%- JSON.stringify(user) %>;
+			if(!window.Scene)
+				 window.Scene = {};
+			window.Scene.event = <%-JSON.stringify(event)%>;
 			
 	        function connectWS() {
 				var socket = null;
@@ -96,11 +93,6 @@
                     $(".event").append(photoView.$el);
                 });
 				
-				
-				$("#photo_input_button").click(function(){
-					$("#photo_input").click();
-				});
-				
                 $("#photo_input").change(function() {
                     var fileReader = new FileReader();
                     var file = this.files[0];
@@ -111,109 +103,36 @@
 					fileReader.onloadend = function(evt) {
                         if (evt.target.readyState == FileReader.DONE) {
                             resizeImage(file, evt.target.result, function(){
-								window.Scene.image_loaded = true;
-								$("#create_photo_modal").modal('show');
+			                    console.log("finished loading image!");
+								$("#uplode_button").attr("disabled",false);
 							});
                         }
                     };
                     fileReader.readAsDataURL(file);
                 });
-				
-				///window.Scene.image_loaded
-				
-				
-				$("#use_photo").click(function(){
-					if(window.Scene.image_loaded){
-						$("#create_photo_modal").modal('hide');
-						alert("click a location for photo");
-						window.Scene.wait_for_photo_location = true;
-					}
-					window.Scene.image_loaded = false;
+				$("#uplode_button").click(function(){
+	            	var target_url = $("#photo_preview")[0].toDataURL();
+	                if (target_url) {
+	                    window.Scene.socket.emit("Photo.create", {
+	                        image: target_url
+	                    });
+	                    target_url = null;
+	                }
 				});
-				
-				$("#cancel_photo").click(function(){
-					if(window.Scene.image_loaded){
-						$("#create_photo_modal").modal('hide');
-						window.Scene.wait_for_photo_location = false;
-					}
-					window.Scene.image_loaded = false;
-				});
-				
-				
-				$(".event").click(function(event){
-					if(window.Scene.wait_for_photo_location){
-						var target_url = $("#photo_preview")[0].toDataURL();
-					    if (target_url) {
-		                    window.Scene.socket.emit("Photo.create", {
-								position : {
-									x : event.offsetX,
-									y : event.offsetY
-								},
-								size : {
-									width : $("#photo_preview").width(),
-									height : $("#photo_preview").height()
-								},
-		                        image: target_url
-		                    });
-		                    target_url = null;
-		                } else {
-							alert("no targeturl");
-						}
-						window.Scene.wait_for_photo_location = false;
-					}
-				});
-		
 			});
 		</script>
 		<style>
-			.event{
-				position:relative;
-				width:100%;
-				height:100%;
-			}
-			.event .photo{
-				position:absolute;
-			}
-			
-			#create_photo_modal{
-			}
+
 		</style>
 	</head>
     <body>
-	    <div class="navbar">
-	        <div class="navbar-inner">
-	            <a class="brand" href="#">Scene</a>
-				<% if (user) { %>
-					<button id="photo_input_button" class="btn btn-info pull-right">Add Photo</button>
-					<input id="photo_input" class="btn btn-info pull-right hide" type="file" value="add Photo"/>
-	            <% } else { %>
-					<a class="btn btn-info pull-right" href="/auth/facebook">Sign in</a>
-					<!---sign in--->
-				<% } %>
-	        </div>
-	    </div>
 		<div class="event">
+			<div class="canvas_container" style="width:100px;height:100px">
+				<canvas id="photo_preview">
+				</canvas>
+			</div>
+			<input id="photo_input" class="btn btn-info" type="file" value="add Photo"/>
+			<button class="btn btn-info" disabled=true id="uplode_button">Upload</button>
 		</div>
-		
-		
-		<div id="create_photo_modal" class="modal hide fade">
-		    <div class="modal-header">Preview
-		        <button class="close" data-dismiss="modal">x</button>
-		    </div>
-			
-	        <fieldset name="photo-creation">
-				<div class="modal-body">
-					<div class="canvas_container" style="width:100%;height:100px">
-						<canvas id="photo_preview">
-						</canvas>
-					</div>
-					<div>
-						<button id="use_photo" class="btn btn-info">Use</button>
-						<button id="cancel_photo" class="btn btn-danger">Cancel</button>
-					</div>
-				</div>
-			</fieldset>
-		</div>
-		
 	</body>
 </html>

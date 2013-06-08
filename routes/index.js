@@ -8,6 +8,7 @@ module.exports = function(app){
 
 	app.get("/", function(req,res){
 		Event.findAll(function(err,events){
+			console.log(req.useragent);
 			var user = req.user;
 			if(user){
 				user = new User(user);
@@ -28,6 +29,6 @@ module.exports = function(app){
 
 	require("./user")(app);
 	require("./event")(app);
-
+	
 	console.log("  --ROUTES END--  ");
 }

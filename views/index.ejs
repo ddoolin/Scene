@@ -17,7 +17,13 @@
             </div>
         </div>
         <div id="map_canvas"></div>
-        <% include modals/create-event %>
+		
+		<div id="create_photo_modal" class="modal hide fade">
+		    <div class="modal-header">New Photo
+		        <button class="close" data-dismiss="modal">x</button>
+		    </div>
+		</div>
+		
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAG1ZYoDAzhL0uivXehR0_5tDLpCcLOaqQ&sensor=false"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
         <script src="/js/vendor/modernizr.min.js"></script>

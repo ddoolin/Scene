@@ -12,8 +12,8 @@ module.exports = function(mongoose){
 			endtime   : { type:Date }
 		},
 		location : {
-			longitude : {type:Number},
-			latitude  : {type:Number},
+			longitude : { type:Number },
+			latitude  : { type:Number },
 		},
 		address : String,
 		description : String,
@@ -54,7 +54,7 @@ module.exports = function(mongoose){
 			var id = req.param("id");
 			mongoose.models.Event.findById(id,function(err,event){
 				if (err) next(err);
-				else if(!event) next(new Error("there is no collage with id",id));
+				else if(!event) next(new Error("there is no event with id",id));
 				else {
 					req.event = event;
 					next();
