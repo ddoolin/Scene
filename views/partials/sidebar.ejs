@@ -1,12 +1,15 @@
-<div class="tabs">
-    <span class="attending-tab active">My Events</span>
-    <span class="spots-tab">My Spots</span>
-</div>
+<ul class="nav nav-tabs">
+    <li class="attending-tab active">My Events</li>
+    <li class="spots-tab">My Spots</li>
+</ul>
 <div class="events">
-    <% for (var i = 0; i < events.length; i++) { %>
+    <% for (var i = 0; i < user.attended_events.length; i++) { %>
         <div class="event">
-            <div class="event-name"></div>
-            <div class="event-duration"></div>
-            <div class="event-location"></div>
+            <div class="event-name">
+                <a href="/events/<%= user.attended_events[i]._id %>"><%= user.attended_events[i].name %></a>
+            </div>
+            <div class="event-duration" data-start-time="<%= user.attended_events[i].duration.starttime.getTime() %>" data-end-time="<%= user.attended_events[i].duration.endtime.getTime() %>"></div>
+            <div class="event-location"><%= user.attended_events[i].address %></div>
+        </div>
     <% } %>
 </div>

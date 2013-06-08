@@ -124,14 +124,30 @@ window.Scene.HomeController = function () {
             markup += "<a class='first-heading' href='/events/" + event._id +  "''>" + event.name +
                 "</a><div class='body-content'>" +
                 "<p class='time'>" + that.formatDate(new Date(event.duration.starttime)) +
-                " @ " + that.formatTime(new Date(event.duration.starttime)) + "</p>" +
-                "<p class='description'>" + event.description + "</p>" +
-                "</div>" +
-                "</div>";
+                " @ " + that.formatTime(new Date(event.duration.starttime)) + "</p>";
+
+            if (window.Scene.user) {
+                markup += "<p class='description logged'>" + event.description + "</p>" +
+                "<a class='attend-event' href='#'>Attend this event</a>";
+            } else {
+                markup += "<p class='description'>" + event.description + "</p>";
+            }
+
+            markup += "</div></div>";
 
         google.maps.event.addListener(marker, "click", function () {
             window.Scene.infoWindow.setContent(markup);
             window.Scene.infoWindow.open(window.Scene.map, this);
+            $(".attend-event").on("click", function (evt) {
+                evt.preventDefault();
+
+                window.socket.emit("User.attendEvent", {
+                    user: window.Scene.user._id,
+                    event: event._id
+                });
+
+                that.addAttendingEvent(event);
+            });
         });
     };
 
@@ -274,6 +290,16 @@ window.Scene.HomeController = function () {
             $("#create_event_modal").modal("hide");
         });
     };
+
+    this.addAttendingEvent = function (event) {
+        var markup = "<div class='event'>" +
+            "<div class='event-name'><a href='/events/" + event._id + "'>" + event.name + "</a></div>" +
+            "<div class='event-duration'>" + moment(event.duration.starttime).format("MM/DD h:mma") +
+            " ~ " + moment(event.duration.endtime).format("MM/DD h:mma") + "</div>" +
+            "<div class='event-location'>" + event.address + "</div></div>";
+
+        $("#sidebar .events").append(markup);
+    };
 };;(function ($) {
 
     var scene = window.Scene,
@@ -315,6 +341,17 @@ window.Scene.HomeController = function () {
 
         socket.socket.connect();
         window.socket = socket;
+    })();
+
+    (function setSidebarTimes () {
+        _.each($("#sidebar .event-duration"), function (time) {
+            // Check year later and show only if it's not the same as the current year
+            var el = $(time).get(0),
+                  startTime = moment($(el).data("start-time")).format("MM/DD, h:mma"),
+                  endTime = moment($(el).data("end-time")).format("MM/DD, h:mma");
+
+            $(el).text(startTime + " ~ " + endTime);
+        });
     })();
 
     (function setEventHandlers () {
@@ -371,6 +408,22 @@ window.Scene.HomeController = function () {
             event.preventDefault();
 
             hc.findOnMap();
+        });
+
+        $(".attending-tab").click(function (event) {
+            $(".spots-tab").removeClass("active");
+            $(".attending-tab").addClass("active");
+
+            $(".spots").hide();
+            $(".events").show();
+        });
+
+        $(".spots-tab").click(function (event) {
+            $(".attending-tab").removeClass("active");
+            $(".spots-tab").addClass("active");
+
+            $(".events").hide();
+            $(".spots").show();
         });
     })();
 })(jQuery);;(function ($) {
