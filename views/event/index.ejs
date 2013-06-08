@@ -16,6 +16,8 @@
 		<script src="/js/models/photo.js"></script>
 		<script src="/js/views/photo_view.js"></script>
 		<script src="/js/views/photo_detail_view.js"></script>
+
+		<script src="/js/test.js"></script>
 		
 		<script src="/socket.io/socket.io.js"></script>
 		<title>Scene</title>
@@ -180,26 +182,6 @@
 				});
 				$(window).resize();
 				
-				var event = $(".event")[0];
-//				event.addEventListener("gesturestart", gestureStart, false);
-				event.addEventListener("gesturechange", function(e){
-					e.preventDefault();
-					
-					event.style.webkitTransform = 'scale(' + e.scale  + ')';
-					
-					if(e.scale > 1){
-						var size = {
-							left : $(".event").width() * (e.scale-1)/2,
-							top  : $(".event").height() * (e.scale-1)/2
-						}
-						$(".event").css(size);
-					} else {
-						$(".event").css({left : 0,top:0});
-					}
-					
-				}, false);
-//				event.addEventListener("gestureend", gestureEnd, false);
-				
 				window.Scene.photoDetailView = new window.Scene.PhotoDetailView();
 			});
 		</script>
@@ -305,5 +287,6 @@
 			</fieldset>
 		</div>
 		
+		\
 	</body>
 </html>
