@@ -3,10 +3,11 @@
     <span class="spots-tab">My Spots</span>
 </div>
 <div class="events">
-    <% for (var i = 0; i < events.length; i++) { %>
+    <% for (var i = 0; i < user.attended_events.length; i++) { %>
         <div class="event">
-            <div class="event-name"></div>
-            <div class="event-duration"></div>
-            <div class="event-location"></div>
+            <div class="event-name"><%= user.attended_events[i].name %></div>
+            <div class="event-duration"><%= user.attended_events[i].duration.starttime %> ~ <%= user.attended_events[i].duration.endttime %></div>
+            <div class="event-location"><%= user.attended_events[i].address %></div>
+        </div>
     <% } %>
 </div>

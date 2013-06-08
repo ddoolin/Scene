@@ -126,12 +126,21 @@ window.Scene.HomeController = function () {
                 "<p class='time'>" + that.formatDate(new Date(event.duration.starttime)) +
                 " @ " + that.formatTime(new Date(event.duration.starttime)) + "</p>" +
                 "<p class='description'>" + event.description + "</p>" +
+                "<a class='attend-event' href='#'>Attend this event</a>" +
                 "</div>" +
                 "</div>";
 
         google.maps.event.addListener(marker, "click", function () {
             window.Scene.infoWindow.setContent(markup);
             window.Scene.infoWindow.open(window.Scene.map, this);
+            $(".attend-event").on("click", function (evt) {
+                evt.preventDefault();
+
+                window.socket.emit("User.attendEvent", {
+                    user_id: window.Scene.user._id,
+                    event_id: event._id
+                });
+            });
         });
     };
 
