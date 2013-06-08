@@ -10,8 +10,15 @@
 		<script src="/socket.io/socket.io.js"></script>
 		<title>Scene</title>
     	<script>
-			var event  = <%-JSON.stringify(event)%>;
+			window.Scene = {};
+			window.Scene.event = <%-JSON.stringify(event)%>;
 			var socket = null;
+			
+			
+			function showPhoto(photo){
+				$(".event").append("<img src='"+photo.image+"'/>");
+			}
+			
 	        function connectWS() {
 	            if (socket == null) {
 	                socket = io.connect("/event");
@@ -22,13 +29,11 @@
 	                socket.on('disconnect', function() {});
 	  				
 					socket.on("Photo.create",function(photo){
-						console.log(photo);
+						showPhoto(photo);
 					});
 				}
 	            socket.socket.connect();
 	        }
-			
-			
             $.fn.get2dContext = function(){
 	            return this[0].getContext("2d");
             };
@@ -36,17 +41,6 @@
 	           	$(this)[0].width  = $(this).width();
 	           	$(this)[0].height = $(this).height();
             };
-
-            function uploadImage() {
-            	var target_url = $("#photo_preview")[0].toDataURL();
-                if (target_url) {
-                    socket.emit("uploadImage", {
-                        image: target_url,
-                        text: $("#text_input").val()
-                    });
-                    target_url = null;
-                }
-            }
 
             function resizeImage(file, dataURL) {
                 var fileType = file.type;
@@ -77,8 +71,15 @@
                     ctx.drawImage(this, 0, 0, imageWidth, imageHeight);
                 }
             }
+			
+		
 			$(function(){
 				connectWS();
+				
+				//present event 
+				window.Scene.event.photos.forEach(showPhoto);
+			
+				
                 $("#photo_input").change(function() {
                     var fileReader = new FileReader();
                     var file = this.files[0];
@@ -89,6 +90,15 @@
                     };
                     fileReader.readAsDataURL(file);
                 });
+				$("#uplode_button").click(function(){
+	            	var target_url = $("#photo_preview")[0].toDataURL();
+	                if (target_url) {
+	                    socket.emit("Photo.create", {
+	                        image: target_url
+	                    });
+	                    target_url = null;
+	                }
+				});
 			});
 		</script>
 		<style>

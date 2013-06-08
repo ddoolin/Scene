@@ -11,6 +11,7 @@ pids
 logs
 results
 
+public/uploaded
 npm-debug.log
 node_modules
 .DS_Store

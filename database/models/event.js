@@ -18,7 +18,21 @@ module.exports = function(mongoose){
 		description : String,
 		image : String
 	});
-	Event.methods = {};
+	
+	Event.methods = {
+		populatePhotos : function(cb){
+			var self = this;
+			return mongoose.models.Photo.find({
+				_event : self.id
+			},function(err,photos){
+				var out = self.toJSON();
+				out.photos = photos;
+				console.log("+" ,out);
+				cb(err,out);
+			});
+		}
+	};
+	
 	Event.statics.findAll = function(cb){
 		return mongoose.models.Event.find({},cb);
 	};
@@ -26,7 +40,7 @@ module.exports = function(mongoose){
 	Event.statics.middleware = {
 		findById : function(req,res,next){
 			var id = req.param("id");
-			Event.findById(id,function(err,event){
+			mongoose.models.Event.findById(id,function(err,event){
 				if (err) next(err);
 				else if(!event) next(new Error("there is no collage with id",id));
 				else {

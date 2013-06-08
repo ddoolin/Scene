@@ -56,11 +56,23 @@ module.exports = function(server){
 			socket.event = data.event;
 		});
 		socket.on("Photo.create",function(data){
+			data._event = socket.event;
 			var Photo = mongoose.models.Photo;
+			
 			var photo = new Photo(data);
 			photo.save(function(err,photo){
-				socket.emit("Photo.create",photo);
-				socket.broadcast.emit("Photo.create",photo);
+				//after saving it, now it has a id
+				var imageName = photo.id + ".png";
+				var targetPath = util.format("%s/../public/uploaded/%s",__dirname,imageName);
+				fs.writeFile(targetPath, data.image.replace(/^data:image\/png;base64,/,""),'base64', function(err) {
+					console.log(err);
+					photo.image = "/uploaded/" + imageName;
+					photo.save(function(err,photo){
+						console.log(photo);
+						socket.emit("Photo.create",photo);
+						socket.broadcast.emit("Photo.create",photo);
+					});
+				});
 			});
 		});
 	});

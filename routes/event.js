@@ -32,8 +32,11 @@ module.exports = function(app){
 	});
 
 	app.get("/events/:id",Event.middleware.findById,function(req,res){
-		res.render("event/index",{
-			event : req.event
+		var event = new Event(req.event);
+		event.populatePhotos(function(err,event){
+			res.render("event/index",{
+				event : event
+			});
 		});
 	});
 }

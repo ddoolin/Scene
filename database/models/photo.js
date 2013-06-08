@@ -6,7 +6,7 @@ module.exports = function(mongoose)
 		ObjectId = Schema.ObjectId;
 	var Photo = new Schema({
 		_creator : { type: ObjectId, ref: 'User' },
-		_collage : { type: ObjectId, ref: 'Event' },
+		_event : { type: ObjectId, ref: 'Event' },
 		size : {
 			width  : {type : Number},
 			height : {type : Number}

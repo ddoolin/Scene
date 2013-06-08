@@ -23,7 +23,7 @@
         <script src="/socket.io/socket.io.js"></script>
         <script>
 			window.Scene.user = <%-JSON.stringify(user)%>;
-            window.Scene.events = <%- JSON.stringify(events) %>;
+            window.Scene.events = <%-JSON.stringify(events)%>;
         </script>
         <script src="/scene.min.js"></script>
     </body>
