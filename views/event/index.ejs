@@ -15,6 +15,8 @@
         <script src="/js/vendor/bootstrap.min.js"></script>
 		<script src="/js/models/photo.js"></script>
 		<script src="/js/views/photo_view.js"></script>
+		<script src="/js/views/photo_detail_view.js"></script>
+		
 		<script src="/socket.io/socket.io.js"></script>
 		<title>Scene</title>
     	<script>
@@ -162,14 +164,70 @@
 						window.Scene.wait_for_photo_location = false;
 					}
 				});
-		
+				
+				$(window).resize(function(){
+					$(".event-container").height( $("body").height() - $(".navbar").height() );
+					var width = $("body").width();
+					var height = $(".event-container").height();
+					console.log(width,height);
+					if(width < height){
+						$(".event").width(width);
+						$(".event").height(width);
+					} else {
+						$(".event").width(height);
+						$(".event").height(height);
+					}
+				});
+				$(window).resize();
+				
+				var event = $(".event")[0];
+//				event.addEventListener("gesturestart", gestureStart, false);
+				event.addEventListener("gesturechange", function(e){
+					e.preventDefault();
+					
+					event.style.webkitTransform = 'scale(' + e.scale  + ')';
+					
+					if(e.scale > 1){
+						var size = {
+							left : $(".event").width() * (e.scale-1)/2,
+							top  : $(".event").height() * (e.scale-1)/2
+						}
+						$(".event").css(size);
+					} else {
+						$(".event").css({left : 0,top:0});
+					}
+					
+				}, false);
+//				event.addEventListener("gestureend", gestureEnd, false);
+				
+				window.Scene.photoDetailView = new window.Scene.PhotoDetailView();
 			});
 		</script>
+		
+		<script src="http://comments.skplanetx.com/script/plugin.js"></script>
+		<script type="text/javascript">
+		SKP.commentsPlugin({
+		    target_id: 'comments_plugin',
+		    op_app_key: '2f1cca55-4606-33f0-892e-091a5e0a4c78',
+		    // 페이지 식별자입니다. 같은 page_id는 같은 댓글들을 표시합니다.
+		    page_id: 'page1',
+			theme : "nophoto1",
+		    // (Optional) 아포가토에 표시될 페이지 제목입니다. 생략 시 브라우저 타이틀이 들어갑니다.
+		    page_title: 'SKPOP Open Platform - 네이트온 이용가이드',
+			is_responsive : true
+		});
+		</script>
+		
 		<style>
 			.event{
+				background-color:blue;
+				-webkit-transform: scale(1);
 				position:relative;
+				margin-left:auto;
+				margin-right:auto;
 				width:100%;
 				height:100%;
+				overflow:scroll;
 			}
 			.event .photo{
 				position:absolute;
@@ -178,7 +236,15 @@
 				width:100%;
 				height:100%;
 			}
-			
+			.event-container {
+				width:100%;
+				height:100%;
+				overflow:scroll;
+			}
+			.event-outer{
+				background-color:red;
+			}
+				
 			#photo_preview
 			{
 				margin-left: auto;
@@ -200,16 +266,18 @@
 				<% } %>
 	        </div>
 	    </div>
-		<div class="event">
+		<div class="event-container">
+			<div class="event-outer">
+				<div class="event">
+				</div>
+			</div>
 		</div>
-		
 		
 		<div id="create_photo_modal" class="modal hide fade">
 		    <div class="modal-header">Preview
 		        <button class="close" data-dismiss="modal">x</button>
 		    </div>
-			
-	        <fieldset name="photo-creation">
+			<fieldset name="photo-creation">
 				<div class="modal-body">
 					<div class="canvas_container" style="width:100%;height:200px">
 						<canvas id="photo_preview">
@@ -219,6 +287,22 @@
 						<button id="use_photo" class="btn btn-info">Use</button>
 						<button id="cancel_photo" class="btn btn-danger">Cancel</button>
 					</div>
+				</div>
+			</fieldset>
+		</div>
+		
+		<div id="photo_detail_modal" class="modal hide fade" style="max-height:100%">
+		    <div class="modal-header">Preview
+		        <button class="close" data-dismiss="modal">x</button>
+		    </div>
+			<fieldset name="photo-creation">
+				<div class="modal-body">
+					<!--img class="photo_img" style="width:100%;height:auto"/-->
+					<!-- 아포가토(댓글 플러그인)를 삽입할 위치에 아래 코드를 넣어주세요. -->
+					<div id="comments_plugin"></div>
+					<ul class="comment_list">
+						
+					</ul>
 				</div>
 			</fieldset>
 		</div>

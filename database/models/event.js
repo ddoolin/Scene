@@ -29,9 +29,24 @@ module.exports = function(mongoose){
 			return mongoose.models.Photo.find({
 				_event : self.id
 			},function(err,photos){
+				async.each(photos,function(photo,cb){
+					photo.populate("comments");
+					cb(null);
+				},function(err){
+					var out = self.toJSON();
+					out.photos = photos;
+					console.log("+" ,out);
+					cb(err,out);
+				});
+			});
+		},
+		populateAttendents : function(cb){
+			var self = this;
+			return mongoose.models.Photo.find({
+				_event : self.id
+			},function(err,photos){
 				var out = self.toJSON();
 				out.photos = photos;
-				console.log("+" ,out);
 				cb(err,out);
 			});
 		}

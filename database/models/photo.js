@@ -17,8 +17,19 @@ module.exports = function(mongoose)
 		},
 		rotation : { type : Number,default : 0 },
 		createdTime : { type: Date, default: Date.now },
-		image : {type: String}
+		image : {type: String},
+		comments : [
+			{ type: ObjectId, ref: 'Comment' }
+		]
 	});
+	
+	Photo.methods = {
+		addComment : function(comment,cb){
+			comment._photo = this._id;
+			this.comments.push(comment._id);
+			return this.save(cb);
+		}
+	};
 	
 	Photo = mongoose.model('Photo', Photo);
 	return Photo;

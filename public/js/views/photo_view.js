@@ -8,8 +8,16 @@
 		className : "photo",
 		template : _.template("<img src='<%=e.image%>'/>"),
 		initialize: function () {
+			_.bindAll(this,"onClick");
 			this.listenTo(this.model, 'change', this.render);
 			this.render();
+			
+			this.$el.click(this.onClick);
+		},
+		onClick : function(){
+			if(window.Scene.photoDetailView){
+				window.Scene.photoDetailView.show(this.model);
+			}
 		},
 		render: function () {
 			var position = this.model.get("position");
@@ -17,7 +25,7 @@
 			this.$el.css({
 				left   : position.x - size.width/2  + "%",
 				top    : position.y - size.height/2 + "%",
-				width  : size.width + "%",
+				width  : size.width  + "%",
 				height : size.height + "%",
 				"-webkit-transform": "rotate(" + this.model.get("rotation") + "deg)"
 			});

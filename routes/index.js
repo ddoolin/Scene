@@ -13,13 +13,13 @@ module.exports = function(app){
 			if(user){
 				user = new User(user);
 				user.populateSpots(function(err,user){
-					res.render("index",{
+					res.render("index" + (req.useragent.isMobile?"-mobile":""),{
 						events : events,
 						user   : user
 					});
 				});
 			} else {
-				res.render("index",{
+				res.render("index" + (req.useragent.isMobile?"-mobile":""),{
 					events : events,
 					user   : null
 				});

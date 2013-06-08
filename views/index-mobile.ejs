@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+        <title>Scene</title>
+        <link rel="stylesheet" href="/css/vendor/bootstrap.min.css" />
+        <link rel="stylesheet" href="/css/vendor/bootstrap-responsive.min.css" />
+        <link rel="stylesheet" href="/css/vendor/jquery-ui-1.10.3.custom.min.css" />
+        <link rel="stylesheet" href="/scene.min.css" />
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <a class="brand" href="#">Scene</a>
+                <% if (user) { %>
+                    <button class="create-event-btn btn" data-toggle="modal" href="#create_event_modal">Create Event</button>
+                    <a class="logout-btn btn" href="/logout">Logout</a>
+					<a class="btn btn-danger pull-right" 
+					  href="#spots-modal" 
+					  role="button"
+					  data-toggle="modal">Spots</a>
+                <% } else { %>
+                    <button class="register-btn btn" data-toggle="modal" href="#registration_modal">Sign Up</button>
+                    <button id="login" class="login-btn btn">Sign In</button>
+                    <div id="login_popover_content" class="hide">
+                        <% include partials/login-form %>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <div id="map_canvas"></div>
+		
+		<% if (user) { %>
+			<div id="spots-modal" class="modal hide fade">
+			    <div class="modal-header">
+					Spots
+					<button class="close" data-dismiss="modal">x</button>
+			    </div>
+				<ul>
+					<%user.spots.forEach(function(spot){%>
+						<li>
+							<%=spot.address%></br>
+							<%=spot.longitude%> , <%=spot.latitude%></br>
+							<%=spot.events.length%></br>
+						</li>
+					<%})%>
+				</ul>
+			</div>
+		<%}%>
+		
+        <% include partials/create-event %>
+        <% include partials/location-finder %>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAG1ZYoDAzhL0uivXehR0_5tDLpCcLOaqQ&sensor=false"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        <script src="/js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
+        <script src="/js/vendor/modernizr.min.js"></script>
+        <script src="/js/vendor/underscore.min.js"></script>
+        <script src="/js/vendor/backbone.min.js"></script>
+        <script src="/js/vendor/bootstrap.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            // Avoid polluting the global namespace
+            if (!window.Scene) {
+                window.Scene = {};
+            }
+
+            window.Scene.events = <%- JSON.stringify(events) %>;
+            window.Scene.user = <%- JSON.stringify(user) %>;
+        </script>
+        <script src="/scene.min.js"></script>
+    </body>
+</html>

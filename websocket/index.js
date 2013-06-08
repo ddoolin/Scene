@@ -42,6 +42,7 @@ module.exports = function(server){
 						error : err
 					});
 				} else {
+					
 					socket.emit("Event.create",event);
 					socket.broadcast.emit("Event.create",event);
 				}
