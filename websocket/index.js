@@ -7,9 +7,9 @@ var path     = require("path");
 var mongoose = require("mongoose");
 
 module.exports = function(server){
-    console.log("	--webSocket--");
-	var io = socketIO.listen(server);
+    console.log("	--webSocket--  ");
 
+	var io = socketIO.listen(server);
 	io.on('connection', function (socket) {
 		socket.on("joinRoom",function(data){
 			socket.join(data.collage);
@@ -21,6 +21,10 @@ module.exports = function(server){
         socket.on('disconnect', function () {
         
 		});
+		
 		// add controller
 	});
+	
+    console.log("	--webSocket end--  ");
+	
 }

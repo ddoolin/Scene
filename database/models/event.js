@@ -6,7 +6,9 @@ module.exports = function(mongoose){
 	var ObjectId = Schema.ObjectId;
 	var Event = new Schema({
 		_creator : { type: ObjectId, ref: 'User' },
-		name	 : String
+		name : String,
+		description : String,
+		image : String
 	});
 	Event.methods = {};
 	Event.statics.middleware = {
