@@ -76,5 +76,17 @@
         $("#create_event_modal").on("shown", function () {
             $("#event_name").focus();
         });
+
+        $("#event_submit").click(function (event) {
+            event.preventDefault();
+
+            hc.createEvent();
+        });
+
+        $("#find_location").click(function (event) {
+            event.preventDefault();
+
+            hc.findOnMap();
+        });
     })();
 })(jQuery);
