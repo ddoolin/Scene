@@ -17,6 +17,23 @@ module.exports = function(server){
     	socket.on('disconnect', function () {
         
 		});
+		
+		socket.on("User.addSpot",function(data){
+			var User = mongoose.models.User;
+			User.findById(data.user,function(err,user){
+				if(err || !user){
+					console.log(err,user);
+				}
+				user.spots.push(data.spot);
+				user.save(function(err,user){
+					console.log(err,user);
+				});
+			});
+			//data.user --> user id
+			//data.spot --> { longitued,latitude}
+			
+		});
+		
 		socket.on("Event.create",function(data){
 			var Event = mongoose.models.Event;
 			var event = new Event(data);
