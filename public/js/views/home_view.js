@@ -7,14 +7,18 @@
 
     (function getLocation () {
         if (Modernizr.geolocation) {
-            navigator.geolocation.getCurrentPosition(createMap);
+            if (localStorage.getItem("currentPosition")) {
+                createMap(localStorage.getItem("currentPosition"));
+            } else {
+                navigator.geolocation.getCurrentPosition(createMap);
+            }
         } else {
             console.log("Geolocation API not supported");
         }
     })();
 
     (function connectWS() {
-        var socket = null;
+        var socket = window.socket = null;
 
         if (socket === null) {
             socket = io.connect("/home");
@@ -24,9 +28,11 @@
         }
 
         socket.socket.connect();
+        window.socket = socket;
     })();
 
     function createMap (position) {
+        localStorage.setItem("currentPosition", position);
         var lat = position.coords.latitude,
               lng = position.coords.longitude,
               map,

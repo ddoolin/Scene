@@ -3,7 +3,7 @@ var mongoose = require("mongoose");
 module.exports = function(app){
 	console.log(" --Events");
 	var Event = mongoose.models.Event;
-	
+
 	app.get("/events/create",function(req,res){
 		res.render("event/create");
 	});
@@ -26,11 +26,11 @@ module.exports = function(app){
 			event.save(function(err,event){
 				res.redirect("/events/",event.id);
 			});
-		} else {	
+		} else {
 			res.redirect("/auth/facebook");
 		}
 	});
-	
+
 	app.get("/events/:id",Event.middleware.findById,function(req,res){
 		res.render("event/index",{
 			event : req.event
