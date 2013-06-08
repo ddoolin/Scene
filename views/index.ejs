@@ -24,6 +24,8 @@
         <script>
             var events = <%- JSON.stringify(events) %>;
             console.log(events);
+			
+			window.Scene.user = <%-JSON.stringify(user)%>;
         </script>
         <script src="/scene.min.js"></script>
     </body>

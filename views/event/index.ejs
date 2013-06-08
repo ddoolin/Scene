@@ -4,23 +4,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
 
-		<script>
-		/*
-		_.templateSettings = {
-			escape		: /<\?-([\s\S]+?)\?>/g,
-			evaluate	: /<\?([\s\S]+?)\?>/g,
-			interpolate : /<\?=([\s\S]+?)\?>/g
-		};
-		Backbone.sync = function(method, model) {
-			//alert(method + ": " + JSON.stringify(model));
-			//console.log(model);
-			socket.emit(model.modelName + ".update", model.toJSON());
-		};
-		*/
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script></script>
 		
-		</script>
 		<script src="/socket.io/socket.io.js"></script>
-		<title>Collage</title>
+		<title>Scene</title>
     	<script>
 			var event  = <%-JSON.stringify(event)%>;
 			var socket = null;
@@ -32,11 +20,75 @@
 	                });
 	                socket.on('message', function(data) {});
 	                socket.on('disconnect', function() {});
-	  			}
+	  				
+					socket.on("Photo.create",function(photo){
+						console.log(photo);
+					});
+				}
 	            socket.socket.connect();
 	        }
+			
+			
+            $.fn.get2dContext = function(){
+	            return this[0].getContext("2d");
+            };
+            $.fn.resizeContext = function(){
+	           	$(this)[0].width  = $(this).width();
+	           	$(this)[0].height = $(this).height();
+            };
+
+            function uploadImage() {
+            	var target_url = $("#photo_preview")[0].toDataURL();
+                if (target_url) {
+                    socket.emit("uploadImage", {
+                        image: target_url,
+                        text: $("#text_input").val()
+                    });
+                    target_url = null;
+                }
+            }
+
+            function resizeImage(file, dataURL) {
+                var fileType = file.type;
+                var image = new Image();
+                image.src = dataURL;
+                image.onload = function() {
+                	var $canvas = $("#photo_preview");
+                	var ctx = $canvas.get2dContext();
+                	var maxWidth    = $(".canvas_container").width(),
+                        maxHeight   = $(".canvas_container").height(),
+                        imageWidth = image.width,
+                        imageHeight = image.height;
+					if (imageWidth > imageHeight) {
+                        if (imageWidth > maxWidth) {
+                            imageHeight *= maxWidth / imageWidth;
+                            imageWidth = maxWidth;
+                        }
+                    }
+                    else {
+                        if (imageHeight > maxHeight) {
+                            imageWidth *= maxHeight / imageHeight;
+                            imageHeight = maxHeight;
+                        }
+                    }
+                    $canvas.width(imageWidth);
+                    $canvas.height(imageHeight);
+                    $canvas.resizeContext();
+                    ctx.drawImage(this, 0, 0, imageWidth, imageHeight);
+                }
+            }
 			$(function(){
 				connectWS();
+                $("#photo_input").change(function() {
+                    var fileReader = new FileReader();
+                    var file = this.files[0];
+                    fileReader.onloadend = function(evt) {
+                        if (evt.target.readyState == FileReader.DONE) {
+                            resizeImage(file, evt.target.result);
+                        }
+                    };
+                    fileReader.readAsDataURL(file);
+                });
 			});
 		</script>
 		<style>
@@ -45,7 +97,12 @@
 	</head>
     <body>
 		<div class="event">
-			<input class="btn btn-info" type="file" value="add Photo"/>
+			<div class="canvas_container" style="width:100px;height:100px">
+				<canvas id="photo_preview">
+				</canvas>
+			</div>
+			<input id="photo_input" class="btn btn-info" type="file" value="add Photo"/>
+			<button id="uplode_button">Upload</button>
 		</div>
 	</body>
 </html>

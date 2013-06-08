@@ -9,7 +9,7 @@ module.exports = function(app){
 		Event.findAll(function(err,events){
 			res.render("index",{
 				events : events,
-				user : req.user
+				user   : req.user?req.user:null
 			});
 		});
 	});
