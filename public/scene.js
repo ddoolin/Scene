@@ -301,6 +301,97 @@ window.Scene.HomeController = function () {
         $("#sidebar .events").append(markup);
     };
 };;(function ($) {
+	'use strict';
+	window.Scene.EventView = Backbone.View.extend({
+		el: ".event",
+		initialize: function () {
+			_.bindAll(this,"onPhotoCreate","onPhotoUpdate");
+			
+			this.listenTo(this.model, 'change', this.render);
+			this.photo_views = {};
+			
+			this.model.get("photos").forEach(this.onPhotoCreate);
+		},
+		onPhotoCreate : function(photo){
+			var view = new window.Scene.PhotoView({model : new window.Scene.Photo(photo)});
+			this.$el.append(view.$el);
+			this.photo_views[photo._id] = view;
+		},
+		onPhotoUpdate : function(photo){
+			this.photo_views[photo._id].model.set("position",photo.position);
+		},
+		registerWSEvents : function(socket){
+			socket.on("Photo.create",this.onPhotoCreate);
+			socket.on("Photo.update",this.onPhotoUpdate);
+		},
+		render : function () {
+			this.$el.html(this.template(this.model.toJSON()));
+			return this;
+		}
+	});
+	
+	// CollageView = Backbone.View.extend({
+	// 	el : $(".collage"),
+	// 	//template: _.template($('#item-template').html()),
+	// 	events: {
+	// 		'click .toggle' : 'toggleCompleted',
+	// 		'dblclick label': 'edit',
+	// 		'click .destroy': 'clear',
+	// 		'keypress .edit': 'updateOnEnter',
+	// 		'blur .edit'	: 'close'
+	// 	},
+	// 	// The TodoView listens for changes to its model, re-rendering. Since there's
+	// 	// a one-to-one correspondence between a **Todo** and a **TodoView** in this
+	// 	// app, we set a direct reference on the model for convenience.
+	// 	initialize: function () {
+	// 		this.listenTo(this.model, 'change',  this.render);
+	// 		this.listenTo(this.model, 'destroy', this.remove);
+	// 		this.listenTo(this.model, 'visible', this.toggleVisible);
+	// 	},
+	// 	render: function () {
+	// 		this.$el.html(this.template(this.model.toJSON()));
+	// 		this.$el.toggleClass('completed', this.model.get('completed'));
+	// 		this.toggleVisible();
+	// 		this.$input = this.$('.edit');
+	// 		return this;
+	// 	},
+	// 	toggleVisible: function () {
+	// 		this.$el.toggleClass('hidden', this.isHidden());
+	// 	},
+	// 	isHidden: function () {
+	// 		var isCompleted = this.model.get('completed');
+	// 		return (// hidden cases only
+	// 			(!isCompleted && app.TodoFilter === 'completed') ||
+	// 			(isCompleted && app.TodoFilter === 'active')
+	// 		);
+	// 	},
+	// 	toggleCompleted: function () {
+	// 		this.model.toggle();
+	// 	},
+	// 	edit: function () {
+	// 		this.$el.addClass('editing');
+	// 		this.$input.focus();
+	// 	},
+	// 	close: function () {
+	// 		var value = this.$input.val().trim();
+	// 		if (value) {
+	// 			this.model.save({ title: value });
+	// 		} else {
+	// 			this.clear();
+	// 		}
+	// 		this.$el.removeClass('editing');
+	// 	},
+	// 	updateOnEnter: function (e) {
+	// 		if (e.which === ENTER_KEY) {
+	// 			this.close();
+	// 		}
+	// 	},
+	// 	clear: function () {
+	// 		this.model.destroy();
+	// 	}
+	// });
+})(jQuery);
+;(function ($) {
 
     var scene = window.Scene,
           hc = new scene.HomeController();
@@ -362,6 +453,18 @@ window.Scene.HomeController = function () {
             content: function () {
                 return $("#login_popover_content").html();
             }
+        });
+
+        $("#cancel_registration").click(function (event) {
+            event.preventDefault();
+
+            $("#registration_modal").modal("hide");
+        });
+
+        $("#user_submit").click(function (event) {
+            event.preventDefault();
+
+            hc.createUser();
         });
 
         // Instantiate the datepickers
@@ -458,11 +561,24 @@ window.Scene.HomeController = function () {
 		className : "photo",
 		template : _.template("<img src='<%=e.image%>'/>"),
 		initialize: function () {
-			_.bindAll(this,"onClick");
+			_.bindAll(this,"onClick","onMoved");
+			
 			this.listenTo(this.model, 'change', this.render);
 			this.render();
 			
 			this.$el.click(this.onClick);
+			this.$el.draggable({cursor: "crosshair"})
+					.on("drag",this.onMoved)
+					.css({"position":"absolute"});
+			
+			this.render();
+		},
+		onMoved : function(){
+			this.model.set("position",{
+				x : this.$el.position().left,
+				y : this.$el.position().top
+			});
+			window.Scene.socket.emit("Photo.update",this.model.toJSON());
 		},
 		onClick : function(){
 			if(window.Scene.photoDetailView){

@@ -29,6 +29,15 @@
         }
     }
 }
+@media only screen and (max-width: 980px) {
+    #map_canvas {
+        margin-top: 0;
+
+        &.logged {
+            width: 100% ;
+        }
+    }
+}
 #sidebar {
     float: right;
     display: inline;
@@ -70,20 +79,6 @@
         }
     }
 }
-#rightclick_menu {
-    position: absolute;
-    height: 100px;
-    width: 100px;
-    background-color: grey;
-
-    ul {
-        list-style: none;
-
-        li {
-            //
-        }
-    }
-}
 #create_event_modal {
     width: 33.3em;
 
@@ -92,6 +87,7 @@
         padding: 0.6em;
         font-size: 28px;
     }
+
     #create_event_form {
         margin: 0;
 
@@ -179,6 +175,19 @@
         }
     }
 }
+#registration_modal {
+    width: 33.3em;
+
+    .modal-header {
+        font-family: "Lobster", cursive;
+        padding: 0.6em;
+        font-size: 28px;
+    }
+
+    #new_user_form {
+        margin: 0;
+    }
+}
 #location_finder_popup {
     .rounded-corners(5px);
     .drop-shadow(5px, 8px, 25px, -3px, 0.5);
@@ -248,6 +257,7 @@
     right: 100px;
 
     .intro-header {
+        color: #CE4213;
         margin-bottom: 0;
     }
 

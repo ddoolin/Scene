@@ -20,6 +20,14 @@
             float: right;
             margin: 1px 15px 0 0;
 
+            .popover-content {
+                padding-bottom: 15px;
+            }
+
+            #login_form {
+                margin-bottom: 10px;
+            }
+
             .create-event-btn {
                 margin-right: 10px;
             }
@@ -27,6 +35,22 @@
             .login-btn {
                 margin-right: 10px;
             }
+
+            .facebook-login-btn {
+                text-indent: -9999px;
+                color: transparent;
+                width: 150px;
+                height: 70px;
+                padding-bottom: 8px;
+                padding-right: 31px;
+                margin-bottom: 10px;
+                background-image: url("/images/facebook_signin.png");
+            }
         }
+    }
+}
+@media only screen and (max-width: 768px) {
+    .navbar .navbar-inner .button-container {
+        margin-right: 30px;
     }
 }
