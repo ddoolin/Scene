@@ -16,7 +16,7 @@ $(function(){
 				left : $(".event").width() * (e.scale-1)/2,
 				top  : $(".event").height() * (e.scale-1)/2
 			}
-//			$(".event").css(size);
+			$(".event").css(size);
 		} else {
 			$(".event").css({left : 0,top:0});
 		}
