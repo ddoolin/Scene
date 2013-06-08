@@ -32,6 +32,9 @@
             socket.on("connect", function() {});
             socket.on('message', function(data) {});
             socket.on('disconnect', function() {});
+            socket.on("Event.create", function (event) {
+                hc.createColoredMarker("green", [event.location.latitude, event.location.longitude]);
+            });
         }
 
         socket.socket.connect();
@@ -72,6 +75,11 @@
 
         // Set the default times (pretty complex, needs own method)
         hc.setDefaultTimes();
+
+        $(".hour").mousedown(function (evt) {
+            parentInput = $(evt.target).parent().siblings().get(1);
+            $(parentInput).val($(evt.target).text());
+        });
 
         $("#create_event_modal").on("shown", function () {
             $("#event_name").focus();

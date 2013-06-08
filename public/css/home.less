@@ -1,5 +1,40 @@
 #map_canvas {
     height: 100%;
+
+    .content {
+        .photo {
+            width: 50px;
+            height: 50px;
+        }
+
+        .first-heading {
+            font-size: 20px;
+            margin-left: 10px;
+        }
+
+        .body-content {
+            margin-top: 9px;
+            font-size: 15px;
+
+            .description {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+#rightclick_menu {
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    background-color: grey;
+
+    ul {
+        list-style: none;
+
+        li {
+            //
+        }
+    }
 }
 #create_event_modal {
     width: 33.3em;
@@ -28,7 +63,7 @@
                 }
 
                 .event-description {
-                    min-height: 4.5em;
+                    min-height: 3.5em;
                 }
 
                 &.location-control-group {

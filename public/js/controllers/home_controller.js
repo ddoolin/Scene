@@ -70,16 +70,16 @@ window.Scene.HomeController = function () {
         formattedTime = hour + ":" + (((minutes < 10) ? "0" : "") + minutes) + " " + meridiem;
 
         return formattedTime;
-    }
+    };
 
     this.createMarker = function (position) {
         var position = (position == undefined) ? new google.maps.LatLng(37.525, 127.000) : new google.maps.LatLng(position[0], position[1]),
-            marker;
+              marker;
 
         marker = new google.maps.Marker({
-            map: map,
+            map: window.Scene.map,
             position: position,
-            draggable: true,
+            draggable: false,
             animation: google.maps.Animation.DROP
         });
 
@@ -114,17 +114,29 @@ window.Scene.HomeController = function () {
         return marker;
     };
 
+    this.createInfoWindow = function (marker, event) {
+        var markup = "<div class='content'>" +
+            "<img src='" + event.image + "' class='photo' />" +
+            "<a class='first-heading' href='/events/" + event._id +  "''>" + event.name +
+            "</a><div class='body-content'>" +
+            "<p class='time'>" + that.formatDate(new Date(event.duration.starttime)) +
+            " @ " + that.formatTime(new Date(event.duration.starttime)) + "</p>" +
+            "<p class='description'>" + event.description + "</p>" +
+            "</div>" +
+            "</div>";
+
+        google.maps.event.addListener(marker, "click", function () {
+            window.Scene.infoWindow.setContent(markup);
+            window.Scene.infoWindow.open(window.Scene.map, this);
+        });
+    };
+
     this.populateMap = function () {
         var events = window.Scene.events;
 
         _.each(window.Scene.events, function (event) {
-            var position = new google.maps.LatLng(event.location.latitude, event.location.longitude),
-                  marker = new google.maps.Marker({
-                      map: window.Scene.map,
-                      position: position,
-                      animation: google.maps.Animation.DROP,
-                      title: event.name
-            });
+            marker = that.createMarker([event.location.latitude, event.location.longitude]);
+            that.createInfoWindow(marker, event);
         });
     };
 
@@ -237,6 +249,7 @@ window.Scene.HomeController = function () {
               event = {
                 _creator: window.Scene.user._id,
                 name: $("#event_name").val(),
+                image: $("#event_photo").val(),
                 description: $("#event_description").val(),
                 address: $("#event_location").val(),
                 duration: {
@@ -253,7 +266,8 @@ window.Scene.HomeController = function () {
                 longitude: results[0].geometry.location.lng()
             };
 
-            window.Scene.socket.emit("Event.create", event);
+            window.socket.emit("Event.create", event);
+            $("#create_event_modal").modal("hide");
         });
     };
 };
