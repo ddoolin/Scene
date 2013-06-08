@@ -298,7 +298,21 @@ window.Scene.HomeController = function () {
             password: $("#signup_password").val()
         };
 
-        window.socket.emit("User.create", data);
+        $.ajax({
+            url: "/register",
+            method: "POST",
+            data: data,
+            success: function (data, textStatus, jqXHR) {
+                window.location.href = "/";
+            },
+            error: function () {
+                console.log("Error");
+            }
+        });
+    };
+
+    this.attemptLogin = function () {
+        console.log("Here");
     };
 
     this.addAttendingEvent = function (event) {

@@ -31,6 +31,6 @@ module.exports = function(app){
 
 	require("./user")(app);
 	require("./event")(app);
-	
+
 	console.log("  --ROUTES END--  ");
 }

@@ -1,8 +1,8 @@
-<form id="login_form">
+<form id="login_form" method="post" action="/login" enctype="application/x-www-form-urlencoded">
     <label for="login_username">Email</label>
     <input type="text" title="login-username" name="login-username" id="login_username" class="login-username" />
     <label for="login_password">Password</label>
     <input type="password" title="login-password" name="login-password" id="login_password" class="login-password" />
-    <button id="login_submit" class="login-submit-btn btn">Sign In</button>
+    <input id="login_submit" type="submit" class="login-submit-btn btn" value="Sign In" />
 </form>
 <a id="facebook_login" class="facebook-login-btn" href="/auth/facebook">Login with Facebook</a>
