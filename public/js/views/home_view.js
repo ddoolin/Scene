@@ -21,7 +21,7 @@
         }
     })();
 
-    (function connectWS() {
+    (function connectWS () {
         var socket = window.socket = null;
 
         if (socket === null) {
@@ -33,6 +33,12 @@
 
         socket.socket.connect();
         window.socket = socket;
+    })();
+
+    (function setEventHandlers () {
+        $(".create-event-btn").click(function () {
+            // Modal
+        });
     })();
 
     function createMap (position) {
