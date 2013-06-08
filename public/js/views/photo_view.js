@@ -8,11 +8,24 @@
 		className : "photo",
 		template : _.template("<img src='<%=e.image%>'/>"),
 		initialize: function () {
-			_.bindAll(this,"onClick");
+			_.bindAll(this,"onClick","onMoved");
+			
 			this.listenTo(this.model, 'change', this.render);
 			this.render();
 			
 			this.$el.click(this.onClick);
+			this.$el.draggable({cursor: "crosshair"})
+					.on("drag",this.onMoved)
+					.css({"position":"absolute"});
+			
+			this.render();
+		},
+		onMoved : function(){
+			this.model.set("position",{
+				x : this.$el.position().left,
+				y : this.$el.position().top
+			});
+			window.Scene.socket.emit("Photo.update",this.model.toJSON());
 		},
 		onClick : function(){
 			if(window.Scene.photoDetailView){

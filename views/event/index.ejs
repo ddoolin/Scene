@@ -9,12 +9,16 @@
 		<link rel="stylesheet" href="/scene.min.css" />
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-        <script src="/js/vendor/modernizr.min.js"></script>
-        <script src="/js/vendor/underscore.min.js"></script>
-        <script src="/js/vendor/backbone.min.js"></script>
-        <script src="/js/vendor/bootstrap.min.js"></script>
+	    <script src="/js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
+	    <script src="/js/vendor/modernizr.min.js"></script>
+	    <script src="/js/vendor/underscore.min.js"></script>
+	    <script src="/js/vendor/backbone.min.js"></script>
+	    <script src="/js/vendor/bootstrap.min.js"></script>
+	
 		<script src="/js/models/photo.js"></script>
+		<script src="/js/models/event.js"></script>
 		<script src="/js/views/photo_view.js"></script>
+		<script src="/js/views/event_view.js"></script>
 		<script src="/js/views/photo_detail_view.js"></script>
 
 		<script src="/js/test.js"></script>
@@ -26,8 +30,8 @@
                 window.Scene = {};
             }
 
-	window.Scene.event = <%- JSON.stringify(event) %>;
-            window.Scene.user = <%- JSON.stringify(user) %>;
+			window.Scene.event = <%- JSON.stringify(event) %>;
+            window.Scene.user  = <%- JSON.stringify(user) %>;
 
 	        function connectWS() {
 				var socket = null;
@@ -38,13 +42,8 @@
 	                });
 	                socket.on('message', function(data) {});
 	                socket.on('disconnect', function() {});
-	  				socket.on("Photo.create",function(photo){
-						var photo = new window.Scene.Photo(photo);
-	                    var photoView = new window.Scene.PhotoView({
-							model : photo
-						});
-	                    $(".event").append(photoView.$el);
-					});
+					
+					window.Scene.eventView.registerWSEvents(socket);
 				}
 	            socket.socket.connect();
 	       		window.Scene.socket = socket;
@@ -91,17 +90,6 @@
 
 
 			$(function(){
-				connectWS();
-
-                window.Scene.event.photos.forEach(function(photo){
-					var photo = new window.Scene.Photo(photo);
-                    var photoView = new window.Scene.PhotoView({
-						model : photo
-					});
-                    $(".event").append(photoView.$el);
-                });
-
-
 				$("#photo_input_button").click(function(){
 					$("#photo_input").click();
 				});
@@ -182,7 +170,12 @@
 				});
 				$(window).resize();
 				
+				window.Scene.eventView = new window.Scene.EventView({
+					model : new window.Scene.Event(window.Scene.event)
+				});
 				window.Scene.photoDetailView = new window.Scene.PhotoDetailView();
+				
+				connectWS();
 			});
 		</script>
 		
@@ -277,7 +270,7 @@
 		    </div>
 			<fieldset name="photo-creation">
 				<div class="modal-body">
-					<!--img class="photo_img" style="width:100%;height:auto"/-->
+					<img class="photo_img" style="width:100%;height:auto"/>
 					<!-- 아포가토(댓글 플러그인)를 삽입할 위치에 아래 코드를 넣어주세요. -->
 					<div id="comments_plugin"></div>
 					<ul class="comment_list">

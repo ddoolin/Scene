@@ -64,6 +64,8 @@ module.exports = function(server){
 		});
 	});
 	
+	var Photo = mongoose.models.Photo;
+	
 	io.of('/event').on('connection', function (socket) {
 		socket.on('message', function (data) { 
 		
@@ -74,7 +76,6 @@ module.exports = function(server){
 		});
 		socket.on("Photo.create",function(data){
 			data._event = socket.event;
-			var Photo = mongoose.models.Photo;
 			
 			var photo = new Photo(data);
 			photo.save(function(err,photo){
@@ -90,6 +91,20 @@ module.exports = function(server){
 						socket.broadcast.emit("Photo.create",photo);
 					});
 				});
+			});
+		});
+
+		socket.on("Photo.update",function(data){
+			data._event = socket.event;
+
+			var photo = new Photo(data);
+			socket.broadcast.to(socket.event).emit('Photo.update', photo.toJSON() );
+			//socket.emit('Photo.update', photo.toJSON());
+
+//			delete data._id;
+			console.log(data);
+			photo.update({ _id: photo._id }, {position:data.position} , function (err, numberAffected, raw) {
+				if (err) console.log(err);
 			});
 		});
 	});
