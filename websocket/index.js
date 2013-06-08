@@ -35,7 +35,14 @@ module.exports = function(server){
 			var Event = mongoose.models.Event;
 			var event = new Event(data);
 			event.save(function(err,event){
-				socket.broadcast.emit("Event.create",event);
+				if(err){
+					socket.emit("Event.create",{
+						error : err
+					});
+				} else {
+					socket.emit("Event.create",event);
+					socket.broadcast.emit("Event.create",event);
+				}
 			});
 		});
 	});
@@ -52,6 +59,7 @@ module.exports = function(server){
 			var Photo = mongoose.models.Photo;
 			var photo = new Photo(data);
 			photo.save(function(err,photo){
+				socket.emit("Photo.create",photo);
 				socket.broadcast.emit("Photo.create",photo);
 			});
 		});
