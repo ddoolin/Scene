@@ -17,5 +17,5 @@
 	"express-mongoose" : "0.1.0",
     "mongoose-schema-extend": "*",
 	"everyauth" : "latest"
-  },
+  }
 }
