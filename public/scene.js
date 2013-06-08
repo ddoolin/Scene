@@ -1,4 +1,10 @@
-(function ($) {
+// Avoid polluting the global namespace
+
+window.Scene = {};;window.Scene.HomeController = function () {
+
+    // Variable decs
+    var that = this;
+};;(function ($) {
 
     // Variable decs
     var scene = window.Scene,
