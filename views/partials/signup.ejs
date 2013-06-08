@@ -2,11 +2,30 @@
     <div class="modal-header">Create Account
         <button class="close" data-dismiss="modal">x</button>
     </div>
-    <form id="new_user_form">
+    <form id="new_user_form" class="form form-horizontal">
         <fieldset name="user-creation">
             <div class="modal-content">
                 <div class="social-signup">
                     <a href="/auth/facebook" class="facebook-signup">Sign Up with Facebook</a>
+                </div>
+                <p class="or-divider">- or -</p>
+                <div class="control-group">
+                    <label class="control-label">Email</label>
+                    <div class="controls">
+                        <input id="signup_email" type="email" name="email" title="email" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Username</label>
+                    <div class="controls">
+                        <input id="signup_username" type="text" name="username" title="username" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Password</label>
+                    <div class="controls">
+                        <input id="signup_password" type="password" name="password" title="password" />
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

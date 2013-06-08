@@ -9,22 +9,21 @@
 		<link rel="stylesheet" href="/scene.min.css" />
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-	    <script src="/js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
-	    <script src="/js/vendor/modernizr.min.js"></script>
-	    <script src="/js/vendor/underscore.min.js"></script>
-	    <script src="/js/vendor/backbone.min.js"></script>
-	    <script src="/js/vendor/bootstrap.min.js"></script>
-	
-		<script src="/js/models/photo.js"></script>
-		<script src="/js/models/event.js"></script>
-		<script src="/js/views/photo_view.js"></script>
-		<script src="/js/views/event_view.js"></script>
-		<script src="/js/views/photo_detail_view.js"></script>
+            <script src="/js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
+            <script src="/js/vendor/modernizr.min.js"></script>
+            <script src="/js/vendor/underscore.min.js"></script>
+            <script src="/js/vendor/backbone.min.js"></script>
+            <script src="/js/vendor/bootstrap.min.js"></script>
+    	<script src="/js/models/photo.js"></script>
+    	<script src="/js/models/event.js"></script>
+    	<script src="/js/views/photo_view.js"></script>
+    	<script src="/js/views/event_view.js"></script>
+    	<script src="/js/views/photo_detail_view.js"></script>
 
-		<script src="/js/test.js"></script>
+    	<script src="/js/test.js"></script>
 
-		<script src="/socket.io/socket.io.js"></script>
-		<title>Scene</title>
+    	<script src="/socket.io/socket.io.js"></script>
+    	<title>Scene</title>
     	<script>
             if (!window.Scene) {
                 window.Scene = {};
@@ -42,7 +41,7 @@
 	                });
 	                socket.on('message', function(data) {});
 	                socket.on('disconnect', function() {});
-					
+
 					window.Scene.eventView.registerWSEvents(socket);
 				}
 	            socket.socket.connect();
@@ -169,17 +168,16 @@
 					}
 				});
 				$(window).resize();
-				
+
 				window.Scene.eventView = new window.Scene.EventView({
 					model : new window.Scene.Event(window.Scene.event)
 				});
 
 				window.Scene.photoDetailView = new window.Scene.PhotoDetailView();
-				
+
 				connectWS();
 			});
 		</script>
-
 		<script src="http://comments.skplanetx.com/script/plugin.js"></script>
 		<script type="text/javascript">
 		SKP.commentsPlugin({
@@ -233,7 +231,7 @@
 	        <div class="navbar-inner">
 	            <a class="brand" href="/">Scene</a>
 				<% if (user) { %>
-					<button id="photo_input_button" class="btn btn-info pull-right">Add Photo</button>
+					<button id="photo_input_button" class="btn btn-primary pull-right">Add Photo</button>
 					<input id="photo_input" class="btn btn-info pull-right hide" type="file" value="add Photo"/>
 	            <% } else { %>
 					<a class="btn btn-info pull-right" href="/auth/facebook">Sign in</a>

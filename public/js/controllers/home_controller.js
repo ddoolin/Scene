@@ -291,6 +291,16 @@ window.Scene.HomeController = function () {
         });
     };
 
+    this.createUser = function () {
+        var data = {
+            name: $("#signup_username").val(),
+            email: $("#signup_email").val(),
+            password: $("#signup_password").val()
+        };
+
+        window.socket.emit("User.create", data);
+    };
+
     this.addAttendingEvent = function (event) {
         var markup = "<div class='event'>" +
             "<div class='event-name'><a href='/events/" + event._id + "'>" + event.name + "</a></div>" +

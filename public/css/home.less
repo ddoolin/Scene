@@ -53,9 +53,10 @@
         li {
             width: 50%;
             text-align: center;
-            padding: 5px 0;
+            padding: 8px 0;
 
             &.active {
+                color: #CE4213;
                 background-color: #CCC;
             }
 
@@ -186,6 +187,35 @@
 
     #new_user_form {
         margin: 0;
+
+        .modal-content {
+            padding: 0 15px;
+
+            .social-signup {
+                text-align: center;
+                margin: 5px 0 10px 0;
+                .facebook-signup {
+                    width: 150px;
+                    height: 70px;
+                    padding: 0 16px 7px 0;
+                    color: transparent;
+                    text-indent: -9999px;
+                    background-image: url("../../images/facebook_signin.png");
+                }
+            }
+
+            .or-divider {
+                text-align: center;
+                font-weight: bold;
+                margin: 10px 0;
+            }
+
+            .control-group {
+                .control-label {
+                    text-align: left;
+                }
+            }
+        }
     }
 }
 #location_finder_popup {
