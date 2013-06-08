@@ -62,6 +62,18 @@
             }
         });
 
+        $("#cancel_registration").click(function (event) {
+            event.preventDefault();
+
+            $("#registration_modal").modal("hide");
+        });
+
+        $("#user_submit").click(function (event) {
+            event.preventDefault();
+
+            hc.createUser();
+        });
+
         // Instantiate the datepickers
         $("#from_date").datepicker({
             minDate: new Date(),
