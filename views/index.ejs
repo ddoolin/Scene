@@ -20,8 +20,8 @@
                     </div>
                 <% } else { %>
                     <div class="button-container">
-                        <button class="register-btn btn" data-toggle="modal" href="#registration_modal">Sign Up</button>
                         <button id="login" class="login-btn btn">Sign In</button>
+                        <button class="register-btn btn" data-toggle="modal" href="#registration_modal">Sign Up</button>
                         <div id="login_popover_content" class="hide">
                             <% include partials/login-form %>
                         </div>
@@ -33,12 +33,6 @@
             <div id="map_canvas" class="logged"></div>
             <div id="sidebar">
                 <% include partials/sidebar %>
-            </div>
-            <div id="rightclick_menu" class="rightclick-menu hide">
-                <ul>
-                    <li>Create event here</li>
-                    <li>Add this area to my Spots</li>
-                </ul>
             </div>
         <% } else { %>
             <div id="map_canvas"></div>
