@@ -17,7 +17,6 @@ module.exports = function(server){
     	socket.on('disconnect', function () {
         
 		});
-		
 		socket.on("User.addSpot",function(data){
 			var User = mongoose.models.User;
 			User.findById(data.user,function(err,user){
@@ -31,14 +30,29 @@ module.exports = function(server){
 			});
 			//data.user --> user id
 			//data.spot --> { longitued,latitude}
-			
 		});
-		
 		socket.on("Event.create",function(data){
 			var Event = mongoose.models.Event;
 			var event = new Event(data);
 			event.save(function(err,event){
 				socket.broadcast.emit("Event.create",event);
+			});
+		});
+	});
+	
+	io.of('/event').on('connection', function (socket) {
+		socket.on('message', function (data) { 
+		
+		});
+		socket.on("joinRoom",function(data){
+			socket.join(data.event);
+			socket.event = data.event;
+		});
+		socket.on("Photo.create",function(data){
+			var Photo = mongoose.models.Photo;
+			var photo = new Photo(data);
+			photo.save(function(err,photo){
+				socket.broadcast.emit("Photo.create",photo);
 			});
 		});
 	});
