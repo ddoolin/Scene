@@ -21,7 +21,6 @@ module.exports = function(server){
         socket.on('disconnect', function () {
         
 		});
-		
 		// add controller
 	});
 }
