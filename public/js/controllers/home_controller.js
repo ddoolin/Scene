@@ -124,11 +124,16 @@ window.Scene.HomeController = function () {
             markup += "<a class='first-heading' href='/events/" + event._id +  "''>" + event.name +
                 "</a><div class='body-content'>" +
                 "<p class='time'>" + that.formatDate(new Date(event.duration.starttime)) +
-                " @ " + that.formatTime(new Date(event.duration.starttime)) + "</p>" +
-                "<p class='description'>" + event.description + "</p>" +
-                "<a class='attend-event' href='#'>Attend this event</a>" +
-                "</div>" +
-                "</div>";
+                " @ " + that.formatTime(new Date(event.duration.starttime)) + "</p>";
+
+            if (window.Scene.user) {
+                markup += "<p class='description logged'>" + event.description + "</p>" +
+                "<a class='attend-event' href='#'>Attend this event</a>";
+            } else {
+                markup += "<p class='description'>" + event.description + "</p>";
+            }
+
+            markup += "</div></div>";
 
         google.maps.event.addListener(marker, "click", function () {
             window.Scene.infoWindow.setContent(markup);
@@ -137,9 +142,11 @@ window.Scene.HomeController = function () {
                 evt.preventDefault();
 
                 window.socket.emit("User.attendEvent", {
-                    user_id: window.Scene.user._id,
-                    event_id: event._id
+                    user: window.Scene.user._id,
+                    event: event._id
                 });
+
+                that.addAttendingEvent(event);
             });
         });
     };
@@ -282,5 +289,15 @@ window.Scene.HomeController = function () {
             window.socket.emit("Event.create", event);
             $("#create_event_modal").modal("hide");
         });
+    };
+
+    this.addAttendingEvent = function (event) {
+        var markup = "<div class='event'>" +
+            "<div class='event-name'><a href='/events/" + event._id + "'>" + event.name + "</a></div>" +
+            "<div class='event-duration'>" + moment(event.duration.starttime).format("MM/DD h:mma") +
+            " ~ " + moment(event.duration.endtime).format("MM/DD h:mma") + "</div>" +
+            "<div class='event-location'>" + event.address + "</div></div>";
+
+        $("#sidebar .events").append(markup);
     };
 };

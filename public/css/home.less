@@ -34,13 +34,39 @@
     display: inline;
     padding-top: 40px;
     background-color: #EEE;
-    border-left: 1px solid #BBB;
+    border-left: 1px solid #D4D4D4;
     height: 100%;
     width: 14.9%;
 
-    .tabs {
-        .attending-tab, .spots-tab {
+    .nav {
+        margin-bottom: 0;
+
+        li {
+            width: 50%;
+            text-align: center;
+            padding: 5px 0;
+
+            &.active {
+                background-color: #CCC;
+            }
+
+            &:hover {
+                background-color: #DDD;
+            }
+        }
+    }
+
+    .events {
+        margin: 0 10px;
+        color: grey;
+        font-size: 11px;
+
+        .event {
+            margin-top: 8px;
+            text-align: center;
             background-color: white;
+            border: 1px solid #DDD;
+            border-radius: 5px;
         }
     }
 }

@@ -41,6 +41,17 @@
         window.socket = socket;
     })();
 
+    (function setSidebarTimes () {
+        _.each($("#sidebar .event-duration"), function (time) {
+            // Check year later and show only if it's not the same as the current year
+            var el = $(time).get(0),
+                  startTime = moment($(el).data("start-time")).format("MM/DD, h:mma"),
+                  endTime = moment($(el).data("end-time")).format("MM/DD, h:mma");
+
+            $(el).text(startTime + " ~ " + endTime);
+        });
+    })();
+
     (function setEventHandlers () {
         // Instantiate the login popover
         $("#login").popover({
@@ -95,6 +106,22 @@
             event.preventDefault();
 
             hc.findOnMap();
+        });
+
+        $(".attending-tab").click(function (event) {
+            $(".spots-tab").removeClass("active");
+            $(".attending-tab").addClass("active");
+
+            $(".spots").hide();
+            $(".events").show();
+        });
+
+        $(".spots-tab").click(function (event) {
+            $(".attending-tab").removeClass("active");
+            $(".spots-tab").addClass("active");
+
+            $(".events").hide();
+            $(".spots").show();
         });
     })();
 })(jQuery);
