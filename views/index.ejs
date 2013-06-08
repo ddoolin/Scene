@@ -1,2 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" 
+			  content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+		<title>Scene</title>
+		<script src="/socket.io/socket.io.js"></script>
+    	<script>
+			var socket = null;
+	        function connectWS() {
+	            if (socket == null) {
+	                socket = io.connect("/home");
+	                socket.on("connect", function() {});
+	                socket.on('message', function(data) {});
+	                socket.on('disconnect', function() {});
+	  			}
+	            socket.socket.connect();
+	        }
+			connectWS();
+		</script>
+		<style>
 
-<%=title%>
+		</style>
+	</head>
+	
+    <body>
+		<div class="navbar">
+			<div class="navbar-inner">
+		  	</div>
+		</div>
+		<div class="event">
+			<pre>
+				<%=JSON.stringify(events)%>
+			</pre>
+		</div>
+	</body>
+</html>

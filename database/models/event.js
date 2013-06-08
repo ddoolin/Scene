@@ -19,6 +19,10 @@ module.exports = function(mongoose){
 		image : String
 	});
 	Event.methods = {};
+	Event.statics.findAll = function(cb){
+		return mongoose.models.Event.find({},cb);
+	};
+	
 	Event.statics.middleware = {
 		findById : function(req,res,next){
 			var id = req.param("id");

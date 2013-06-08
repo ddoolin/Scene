@@ -4,6 +4,9 @@ module.exports = function(app){
 	console.log(" --Events");
 	var Event = mongoose.models.Event;
 	
+	app.get("/events/create",function(req,res){
+		res.render("event/create");
+	});
 	app.post("/events",function(req,res){
 		if (req.user) {
 			var event = new Event({
