@@ -1,0 +1,63 @@
+#mobile_info_modal {
+    max-height: 400px;
+    overflow: hidden;
+
+    .modal-header {
+        font-family: "Lobster", cursive;
+        padding: 0.6em;
+        font-size: 28px;
+    }
+
+    .modal-content {
+        .nav {
+            margin-bottom: 0;
+
+            li {
+                width: 50%;
+                text-align: center;
+                padding: 8px 0;
+
+                &.active {
+                    color: #CE4213;
+                    background-color: #CCC;
+                }
+            }
+        }
+
+        .events {
+            margin: 0 10px 10px 10px;
+            color: grey;
+            font-size: 11px;
+
+            .event {
+                .rounded-corners(5px);
+                margin-top: 8px;
+                text-align: center;
+                background-color: white;
+                border: 1px solid #DDD;
+            }
+        }
+
+        .spots {
+            overflow: auto;
+            max-height: 100%;
+
+            .add-spot-container {
+                margin-top: 10px;
+                text-align: center;
+
+                .spot-text {
+                    width: 180px;
+                }
+            }
+
+            .spot {
+                .rounded-corners(5px);
+                border: 1px solid #DDD;
+                margin: 10px 10px 0 10px;
+                background-color: white;
+                text-align: center;
+            }
+        }
+    }
+}

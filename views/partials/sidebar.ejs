@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs">
-    <li class="attending-tab active">My Events</li>
-    <li class="spots-tab">My Spots</li>
+    <li class="attending-tab active">My Events (<%= user.attended_events.length %>)</li>
+    <li class="spots-tab">My Spots (<%= user.spots.length %>)</li>
 </ul>
 <div class="events">
     <% for (var i = 0; i < user.attended_events.length; i++) { %>

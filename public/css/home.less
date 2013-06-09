@@ -33,15 +33,6 @@
         }
     }
 }
-@media only screen and (max-width: 980px) {
-    #map_canvas {
-        margin-top: 0;
-
-        &.logged {
-            width: 100% ;
-        }
-    }
-}
 #sidebar {
     float: right;
     display: inline;
@@ -108,6 +99,19 @@
                 text-align: center;
             }
         }
+    }
+}
+@media only screen and (max-width: 980px) {
+    #map_canvas {
+        margin-top: 0;
+
+        &.logged {
+            width: 100% ;
+        }
+    }
+
+    #sidebar {
+        display: none;
     }
 }
 #create_event_modal {

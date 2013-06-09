@@ -4,8 +4,30 @@
     </div>
     <div class="modal-content">
         <ul class="nav nav-tabs">
-            <li class="events-tab active">My Events</li>
-            <li class="spots-tab">My Spots</li>
+            <li class="attending-tab active">My Events (<%= user.attended_events.length %>)</li>
+            <li class="spots-tab">My Spots (<%= user.spots.length %>)</li>
         </ul>
+        <div class="events">
+            <% for (var i = 0; i < user.attended_events.length; i++) { %>
+                <div class="event">
+                    <div class="event-name">
+                        <a href="/events/<%= user.attended_events[i]._id %>"><%= user.attended_events[i].name %></a>
+                    </div>
+                    <div class="event-duration" data-start-time="<%= user.attended_events[i].duration.starttime.getTime() %>" data-end-time="<%= user.attended_events[i].duration.endtime.getTime() %>"></div>
+                    <div class="event-location"><%= user.attended_events[i].address %></div>
+                </div>
+            <% } %>
+        </div>
+        <div class="spots hide">
+            <% for (var i = 0; i< user.spots.length; i++) { %>
+                <div class="spot">
+                    <a class="spot-address" href="#" data-lat="<%= user.spots[i].latitude %>" data-lng="<%= user.spots[i].longitude %>"><%= user.spots[i].address %></a>
+                </div>
+            <% } %>
+            <div class="add-spot-container">
+                <input type="text" class="spot-text" name="spot-location" title="spot-location" placeholder="New Spot (e.g. Seoul, Korea)" />
+                <button id="add_spot" class="btn">Add Spot</button>
+            </div>
+        </div>
     </div>
 </div>
