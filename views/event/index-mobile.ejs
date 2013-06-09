@@ -19,6 +19,8 @@
     	<script src="/js/views/photo_view.js"></script>
     	<script src="/js/views/event_view.js"></script>
     	<script src="/js/views/photo_detail_view.js"></script>
+    	<script src="/js/megapixel-image.js"></script>
+		
 
     	<script src="/js/test.js"></script>
 
@@ -56,37 +58,6 @@
 	           	$(this)[0].height = $(this).height();
             };
 
-            function resizeImage(file, dataURL,cb) {
-                var fileType = file.type;
-                var image = new Image();
-                image.src = dataURL;
-                image.onload = function() {
-                	var $canvas = $("#photo_preview");
-                	var ctx = $canvas.get2dContext();
-                	var maxWidth    = $(".canvas_container").width(),
-                        maxHeight   = $(".canvas_container").height(),
-                        imageWidth = image.width,
-                        imageHeight = image.height;
-					if (imageWidth > imageHeight) {
-                        if (imageWidth > maxWidth) {
-                            imageHeight *= maxWidth / imageWidth;
-                            imageWidth = maxWidth;
-                        }
-                    }
-                    else {
-                        if (imageHeight > maxHeight) {
-                            imageWidth *= maxHeight / imageHeight;
-                            imageHeight = maxHeight;
-                        }
-                    }
-                    $canvas.width(imageWidth);
-                    $canvas.height(imageHeight);
-                    $canvas.resizeContext();
-                    ctx.drawImage(this, 0, 0, imageWidth, imageHeight);
-					cb();
-                }
-            }
-
 
 			$(function(){
 				$("#photo_input_button").click(function(){
@@ -95,24 +66,21 @@
 
                 $("#photo_input").change(function() {
                     var fileReader = new FileReader();
-                    var file = this.files[0];
-                    console.log("Start loading image..");
 
-					$("#uplode_button").attr("disabled",true);
-
-					fileReader.onloadend = function(evt) {
-                        if (evt.target.readyState == FileReader.DONE) {
-                            resizeImage(file, evt.target.result, function(){
-								window.Scene.image_loaded = true;
-								$("#create_photo_modal").modal('show');
-							});
-                        }
-                    };
-                    fileReader.readAsDataURL(file);
-                });
-
-				///window.Scene.image_loaded
-
+				    var file = this.files[0];
+					window.mpImg = new MegaPixImage(file);
+				
+					var canvas = document.getElementById('photo_preview');
+					
+					var maxWidth    = $(".canvas_container").width(),
+                        maxHeight   = $(".canvas_container").height();
+											
+				    window.mpImg.render(canvas, { maxWidth: maxWidth, maxHeight : maxWidth });
+					
+					$("#create_photo_modal").modal('show');
+					
+					window.Scene.image_loaded = true;
+				});
 
 				$("#use_photo").click(function(){
 					if(window.Scene.image_loaded){
@@ -205,7 +173,7 @@
 			    page_id: 'page1',
 				theme : "nophoto1",
 			    // (Optional) 아포가토에 표시될 페이지 제목입니다. 생략 시 브라우저 타이틀이 들어갑니다.
-			    page_title: 'SKPOP Open Platform - 네이트온 이용가이드',
+			    page_title: 'SKPOP Open Platform - 네이트온 이용가이드',	
 				is_responsive : true
 			});
 		</script>
@@ -239,6 +207,9 @@
 				margin-left: auto;
 				margin-right: auto;
 				display: block;
+				width:200px;
+				height:200px;
+				background-color:red;
 			}
 			#photo_detail_modal
 			{
