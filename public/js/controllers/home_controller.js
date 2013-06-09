@@ -28,6 +28,8 @@ window.Scene.HomeController = function () {
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
         window.Scene.map = map;
 
+        marker = that.createColoredMarker("yellow", [lat, lng]);
+
         that.populateMap();
     };
 
@@ -355,6 +357,13 @@ window.Scene.HomeController = function () {
             "' data-lng='" + spot.longitude + "'>" + spot.address + "</a></div>";
 
         $("#sidebar .spots").prepend(markup);
+        el = $("#sidebar .spot").get(0)
+        console.log($(el));
+        $(el).click(function (event) {
+            event.preventDefault();
+
+            that.centerSpot($(el).data("lat"), $(el).data("lng"));
+        });
     };
 
     this.centerSpot = function (lat, lng) {
