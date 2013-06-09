@@ -15,7 +15,7 @@ window.Scene.HomeController = function () {
         // Options to pass to the map
         mapOptions = {
             center: new google.maps.LatLng(lat, lng),
-            zoom: 11,
+            zoom: 14,
             streetViewControl: false,
             panControl: false,
             mapTypeControl: true,
@@ -245,6 +245,7 @@ window.Scene.HomeController = function () {
                 }
 
                 marker.setPosition(results[0].geometry.location);
+		window.Scene.map.setCenter(results[0].geometry.location);
             });
         });
 
@@ -358,7 +359,7 @@ window.Scene.HomeController = function () {
 
         $("#sidebar .spots").prepend(markup);
         el = $("#sidebar .spot").get(0)
-        console.log($(el));
+	el = $(el).find(".spot-address");
         $(el).click(function (event) {
             event.preventDefault();
 
@@ -367,6 +368,7 @@ window.Scene.HomeController = function () {
     };
 
     this.centerSpot = function (lat, lng) {
+	console.log(lat, lng);
         var latLng = new google.maps.LatLng(lat, lng);
 
         window.Scene.map.setCenter(latLng);
@@ -629,7 +631,8 @@ window.Scene.HomeController = function () {
             hc.centerSpot($(event.target).data("lat"), $(event.target).data("lng"));
         });
     })();
-})(jQuery);;(function ($) {
+})(jQuery);
+;(function ($) {
 	'use strict';
 	if(!window.Scene)
 		window.Scene = {};
