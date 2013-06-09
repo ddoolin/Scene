@@ -192,6 +192,8 @@
 				window.Scene.photoDetailView = new window.Scene.PhotoDetailView();
 
 				connectWS();
+				
+				$(".event-container").css("background-image","url('" + "/backgrounds/" + (Math.floor(Math.random() * 15) + 1) + ".png')");
 			});
 		</script>
 		<script src="http://comments.skplanetx.com/script/plugin.js"></script>
