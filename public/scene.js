@@ -298,7 +298,21 @@ window.Scene.HomeController = function () {
             password: $("#signup_password").val()
         };
 
-        window.socket.emit("User.create", data);
+        $.ajax({
+            url: "/register",
+            method: "POST",
+            data: data,
+            success: function (data, textStatus, jqXHR) {
+                window.location.href = "/";
+            },
+            error: function () {
+                console.log("Error");
+            }
+        });
+    };
+
+    this.attemptLogin = function () {
+        console.log("Here");
     };
 
     this.addAttendingEvent = function (event) {
@@ -310,7 +324,8 @@ window.Scene.HomeController = function () {
 
         $("#sidebar .events").append(markup);
     };
-};;(function ($) {
+};
+;(function ($) {
 	'use strict';
 	window.Scene.EventView = Backbone.View.extend({
 		el: ".event",
@@ -574,19 +589,20 @@ window.Scene.HomeController = function () {
 			_.bindAll(this,"onClick","onMoved");
 			
 			this.listenTo(this.model, 'change', this.render);
-			this.render();
 			
 			this.$el.click(this.onClick);
 			this.$el.draggable({cursor: "crosshair"})
 					.on("drag",this.onMoved)
 					.css({"position":"absolute"});
 			
+			this.$el.html(this.template({e : this.model.toJSON()}));
 			this.render();
 		},
 		onMoved : function(){
+			var size = this.model.get("size");
 			this.model.set("position",{
-				x : this.$el.position().left,
-				y : this.$el.position().top
+				x : (this.$el.position().left) / $(".event").width() * 100,
+				y : (this.$el.position().top ) / $(".event").height() * 100
 			});
 			window.Scene.socket.emit("Photo.update",this.model.toJSON());
 		},
@@ -599,13 +615,12 @@ window.Scene.HomeController = function () {
 			var position = this.model.get("position");
 			var size	 = this.model.get("size");
 			this.$el.css({
-				left   : position.x - size.width/2  + "%",
-				top    : position.y - size.height/2 + "%",
+				left   : position.x+ "%",
+				top    : position.y+ "%",
 				width  : size.width  + "%",
 				height : size.height + "%",
 				"-webkit-transform": "rotate(" + this.model.get("rotation") + "deg)"
 			});
-			this.$el.html(this.template({e : this.model.toJSON()}));
 			return this;
 		}
 	});
