@@ -154,7 +154,7 @@
 									size.height *= scale;
 								}
 							}
-							
+
 		                    window.Scene.socket.emit("Photo.create", {
 								position : {
 									x : event.offsetX / $(".event").width() * 100,
@@ -246,7 +246,7 @@
 	            <a class="brand" href="/">Scene</a>
 				<% if (user) { %>
 					<button id="photo_input_button" class="btn btn-primary pull-right">Add Photo</button>
-					<input id="photo_input" class="btn btn-info pull-right hide" type="file" value="add Photo"/>
+					<input id="photo_input" class="btn btn-info pull-right hide" type="file" value="Add Photo"/>
 	            <% } else { %>
 					<a class="btn btn-info pull-right" href="/auth/facebook">Sign in</a>
 					<!---sign in--->
