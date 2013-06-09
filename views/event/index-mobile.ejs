@@ -125,8 +125,8 @@
 							
 		                    window.Scene.socket.emit("Photo.create", {
 								position : {
-									x : event.offsetX / $(".event").width() * 100,
-									y : event.offsetY / $(".event").height() * 100
+									x : ( event.offsetX - $(".canvas_container").width()/2) / $(".event").width() * 100,
+									y : ( event.offsetY - $(".canvas_container").width()/2) / $(".event").height() * 100
 								},
 								size : size,
 		                        image: target_url
