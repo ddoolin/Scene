@@ -111,6 +111,8 @@ window.Scene.HomeController = function () {
             icon: image
         });
 
+        window.Scene.map.setCenter(position);
+
         return marker;
     };
 

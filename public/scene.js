@@ -111,6 +111,8 @@ window.Scene.HomeController = function () {
             icon: image
         });
 
+        window.Scene.map.setCenter(position);
+
         return marker;
     };
 
@@ -487,7 +489,9 @@ window.Scene.HomeController = function () {
             socket.on('message', function(data) {});
             socket.on('disconnect', function() {});
             socket.on("Event.create", function (event) {
-                hc.createColoredMarker("green", [event.location.latitude, event.location.longitude]);
+                marker = hc.createColoredMarker("green", [event.location.latitude, event.location.longitude]);
+
+                hc.createInfoWindow(marker, event);
             });
             socket.on("User.addSpot", function (spot) {
                 hc.renderSpot(spot);
