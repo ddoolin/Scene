@@ -322,7 +322,43 @@ window.Scene.HomeController = function () {
             " ~ " + moment(event.duration.endtime).format("MM/DD h:mma") + "</div>" +
             "<div class='event-location'>" + event.address + "</div></div>";
 
-        $("#sidebar .events").append(markup);
+        $("#sidebar .events").prepend(markup);
+    };
+
+    this.addSpot = function () {
+        if ($(".spot-text").val()) {
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                "address": $(".spot-text").val()
+            }, function (results, status) {
+                if (results) {
+                    var data = {
+                        user: window.Scene.user._id,
+                        spot: {
+                            latitude: results[0].geometry.location.lat(),
+                            longitude: results[0].geometry.location.lng(),
+                            address: results[0].formatted_address
+                        }
+                    };
+
+                    window.socket.emit("User.addSpot", data);
+                }
+            });
+        }
+    };
+
+    this.renderSpot = function (spot) {
+        var spot = spot.spot,
+              markup = "<div class='spot'><a class='spot-address' href='#' data-lat='" + spot.latitude +
+            "' data-lng='" + spot.longitude + "'>" + spot.address + "</a></div>";
+
+        $("#sidebar .spots").prepend(markup);
+    };
+
+    this.centerSpot = function (lat, lng) {
+        var latLng = new google.maps.LatLng(lat, lng);
+
+        window.Scene.map.setCenter(latLng);
     };
 };
 ;(function ($) {
@@ -453,6 +489,9 @@ window.Scene.HomeController = function () {
             socket.on("Event.create", function (event) {
                 hc.createColoredMarker("green", [event.location.latitude, event.location.longitude]);
             });
+            socket.on("User.addSpot", function (spot) {
+                hc.renderSpot(spot);
+            });
         }
 
         socket.socket.connect();
@@ -480,12 +519,14 @@ window.Scene.HomeController = function () {
             }
         });
 
+        // Close registration modal
         $("#cancel_registration").click(function (event) {
             event.preventDefault();
 
             $("#registration_modal").modal("hide");
         });
 
+        // Create new user submit
         $("#user_submit").click(function (event) {
             event.preventDefault();
 
@@ -517,26 +558,33 @@ window.Scene.HomeController = function () {
         // Set the default times (pretty complex, needs own method)
         hc.setDefaultTimes();
 
+        // Set hour text on click
         $(".hour").mousedown(function (evt) {
             parentInput = $(evt.target).parent().siblings().get(1);
             $(parentInput).val($(evt.target).text());
         });
 
+        // Focus text field on modal show
         $("#create_event_modal").on("shown", function () {
             $("#event_name").focus();
         });
 
+        // Create new event click
         $("#event_submit").click(function (event) {
             event.preventDefault();
 
             hc.createEvent();
         });
 
+        // Find on Map button click
         $("#find_location").click(function (event) {
             event.preventDefault();
 
             hc.findOnMap();
         });
+
+        // Tab switching
+        $(".spots-container").height($("#sidebar").height() - 36);
 
         $(".attending-tab").click(function (event) {
             $(".spots-tab").removeClass("active");
@@ -552,6 +600,20 @@ window.Scene.HomeController = function () {
 
             $(".events").hide();
             $(".spots").show();
+        });
+
+        // Adding spots
+        $("#add_spot").click(function (event) {
+            event.preventDefault();
+
+            hc.addSpot();
+        });
+
+        // Clicking spots
+        $(".spot-address").click(function (event) {
+            event.preventDefault();
+
+            hc.centerSpot($(event.target).data("lat"), $(event.target).data("lng"));
         });
     })();
 })(jQuery);;(function ($) {

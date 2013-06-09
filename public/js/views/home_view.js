@@ -35,6 +35,9 @@
             socket.on("Event.create", function (event) {
                 hc.createColoredMarker("green", [event.location.latitude, event.location.longitude]);
             });
+            socket.on("User.addSpot", function (spot) {
+                hc.renderSpot(spot);
+            });
         }
 
         socket.socket.connect();
@@ -62,12 +65,14 @@
             }
         });
 
+        // Close registration modal
         $("#cancel_registration").click(function (event) {
             event.preventDefault();
 
             $("#registration_modal").modal("hide");
         });
 
+        // Create new user submit
         $("#user_submit").click(function (event) {
             event.preventDefault();
 
@@ -99,26 +104,33 @@
         // Set the default times (pretty complex, needs own method)
         hc.setDefaultTimes();
 
+        // Set hour text on click
         $(".hour").mousedown(function (evt) {
             parentInput = $(evt.target).parent().siblings().get(1);
             $(parentInput).val($(evt.target).text());
         });
 
+        // Focus text field on modal show
         $("#create_event_modal").on("shown", function () {
             $("#event_name").focus();
         });
 
+        // Create new event click
         $("#event_submit").click(function (event) {
             event.preventDefault();
 
             hc.createEvent();
         });
 
+        // Find on Map button click
         $("#find_location").click(function (event) {
             event.preventDefault();
 
             hc.findOnMap();
         });
+
+        // Tab switching
+        $(".spots-container").height($("#sidebar").height() - 36);
 
         $(".attending-tab").click(function (event) {
             $(".spots-tab").removeClass("active");
@@ -134,6 +146,20 @@
 
             $(".events").hide();
             $(".spots").show();
+        });
+
+        // Adding spots
+        $("#add_spot").click(function (event) {
+            event.preventDefault();
+
+            hc.addSpot();
+        });
+
+        // Clicking spots
+        $(".spot-address").click(function (event) {
+            event.preventDefault();
+
+            hc.centerSpot($(event.target).data("lat"), $(event.target).data("lng"));
         });
     })();
 })(jQuery);
