@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+
+        <link rel="stylesheet" href="/css/vendor/bootstrap.min.css" />
+        <link rel="stylesheet" href="/css/vendor/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" href="/scene.min.css" />
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+            <script src="/js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
+            <script src="/js/vendor/modernizr.min.js"></script>
+            <script src="/js/vendor/underscore.min.js"></script>
+            <script src="/js/vendor/backbone.min.js"></script>
+            <script src="/js/vendor/bootstrap.min.js"></script>
+    	<script src="/js/models/photo.js"></script>
+    	<script src="/js/models/event.js"></script>
+    	<script src="/js/views/photo_view.js"></script>
+    	<script src="/js/views/event_view.js"></script>
+    	<script src="/js/views/photo_detail_view.js"></script>
+
+    	<script src="/js/test.js"></script>
+
+    	<script src="/socket.io/socket.io.js"></script>
+    	<title>Scene</title>
+    	<script>
+            if (!window.Scene) {
+                window.Scene = {};
+            }
+
+			window.Scene.event = <%- JSON.stringify(event) %>;
+            window.Scene.user  = <%- JSON.stringify(user) %>;
+
+	        function connectWS() {
+				var socket = null;
+			    if (window.Scene.socket == null) {
+	                socket = io.connect("/event");
+					socket.on("connect", function() {
+	                    socket.emit("joinRoom",{event:"<%=event._id%>"});
+	                });
+	                socket.on('message', function(data) {});
+	                socket.on('disconnect', function() {});
+
+					window.Scene.eventView.registerWSEvents(socket);
+				}
+	            socket.socket.connect();
+	       		window.Scene.socket = socket;
+		    }
+
+            $.fn.get2dContext = function(){
+	            return this[0].getContext("2d");
+            };
+            $.fn.resizeContext = function(){
+	           	$(this)[0].width  = $(this).width();
+	           	$(this)[0].height = $(this).height();
+            };
+
+            function resizeImage(file, dataURL,cb) {
+                var fileType = file.type;
+                var image = new Image();
+                image.src = dataURL;
+                image.onload = function() {
+                	var $canvas = $("#photo_preview");
+                	var ctx = $canvas.get2dContext();
+                	var maxWidth    = $(".canvas_container").width(),
+                        maxHeight   = $(".canvas_container").height(),
+                        imageWidth = image.width,
+                        imageHeight = image.height;
+					if (imageWidth > imageHeight) {
+                        if (imageWidth > maxWidth) {
+                            imageHeight *= maxWidth / imageWidth;
+                            imageWidth = maxWidth;
+                        }
+                    }
+                    else {
+                        if (imageHeight > maxHeight) {
+                            imageWidth *= maxHeight / imageHeight;
+                            imageHeight = maxHeight;
+                        }
+                    }
+                    $canvas.width(imageWidth);
+                    $canvas.height(imageHeight);
+                    $canvas.resizeContext();
+                    ctx.drawImage(this, 0, 0, imageWidth, imageHeight);
+					cb();
+                }
+            }
+
+
+			$(function(){
+				$("#photo_input_button").click(function(){
+					$("#photo_input").click();
+				});
+
+                $("#photo_input").change(function() {
+                    var fileReader = new FileReader();
+                    var file = this.files[0];
+                    console.log("Start loading image..");
+
+					$("#uplode_button").attr("disabled",true);
+
+					fileReader.onloadend = function(evt) {
+                        if (evt.target.readyState == FileReader.DONE) {
+                            resizeImage(file, evt.target.result, function(){
+								window.Scene.image_loaded = true;
+								$("#create_photo_modal").modal('show');
+							});
+                        }
+                    };
+                    fileReader.readAsDataURL(file);
+                });
+
+				///window.Scene.image_loaded
+
+
+				$("#use_photo").click(function(){
+					if(window.Scene.image_loaded){
+						$("#create_photo_modal").modal('hide');
+						alert("click a location for photo");
+						window.Scene.wait_for_photo_location = true;
+					}
+					window.Scene.image_loaded = false;
+				});
+
+				$("#cancel_photo").click(function(){
+					if(window.Scene.image_loaded){
+						$("#create_photo_modal").modal('hide');
+						window.Scene.wait_for_photo_location = false;
+					}
+					window.Scene.image_loaded = false;
+				});
+
+
+				$(".event").click(function(event){
+					if(window.Scene.wait_for_photo_location){
+						var target_url = $("#photo_preview")[0].toDataURL();
+					    if (target_url) {
+							var size = {
+								width  : $("#photo_preview").width()  / $(".event").width() * 100,
+								height : $("#photo_preview").height() / $(".event").height() * 100
+							};
+							var maxSize = 17;
+							if(size.width > size.height) {
+								if(size.width > maxSize){
+									var scale = maxSize / size.width;
+									size.width *= scale;
+									size.height *= scale;
+								}
+							} else {
+								if(size.height > maxSize){
+									var scale = maxSize / size.height;
+									size.width *= scale;
+									size.height *= scale;
+								}
+							}
+							
+		                    window.Scene.socket.emit("Photo.create", {
+								position : {
+									x : event.offsetX / $(".event").width() * 100,
+									y : event.offsetY / $(".event").height() * 100
+								},
+								size : size,
+		                        image: target_url
+		                    });
+		                    target_url = null;
+		                } else {
+							alert("no targeturl");
+						}
+						window.Scene.wait_for_photo_location = false;
+					}
+				});
+				$(window).resize(function(){
+					$(".event-container").height( $("body").height() - $(".navbar").height() );
+					var width = $("body").width();
+					var height = $(".event-container").height();
+					console.log(width,height);
+					if(width < height){
+						$(".event").width(width);
+						$(".event").height(width);
+					} else {
+						$(".event").width(height);
+						$(".event").height(height);
+					}
+				});
+				$(window).resize();
+
+				window.Scene.eventView = new window.Scene.EventView({
+					model : new window.Scene.Event(window.Scene.event)
+				});
+
+				window.Scene.photoDetailView = new window.Scene.PhotoDetailView();
+
+				connectWS();
+				
+				
+			});
+		</script>
+		<script src="http://comments.skplanetx.com/script/plugin.js"></script>
+		<script type="text/javascript">
+			SKP.commentsPlugin({
+			    target_id: 'comments_plugin',
+			    op_app_key: '2f1cca55-4606-33f0-892e-091a5e0a4c78',
+			    // 페이지 식별자입니다. 같은 page_id는 같은 댓글들을 표시합니다.
+			    page_id: 'page1',
+				theme : "nophoto1",
+			    // (Optional) 아포가토에 표시될 페이지 제목입니다. 생략 시 브라우저 타이틀이 들어갑니다.
+			    page_title: 'SKPOP Open Platform - 네이트온 이용가이드',
+				is_responsive : true
+			});
+		</script>
+
+		<style>
+			.event{
+				-webkit-transform: scale(1);
+				position:relative;
+				margin-left:auto;
+				margin-right:auto;
+				width:100%;
+				height:100%;
+				overflow:scroll;
+			}
+			.event .photo{
+				position:absolute;
+			}
+			.event .photo img{
+				width:100%;
+				height:100%;
+			}
+			.event-container {
+				width:100%;
+				height:100%;
+				overflow:scroll;
+			}
+			.event-outer{
+			}
+			#photo_preview
+			{
+				margin-left: auto;
+				margin-right: auto;
+				display: block;
+			}
+			#photo_detail_modal
+			{
+				max-height:80%;
+				display: block;
+				overflow: scroll;
+			}
+			#comments_plugin 
+			{
+				margin-bottom:200px;
+			}
+		</style>
+	</head>
+    <body>
+		<div id="photo_detail_modal" class="modal hide fade" style="display:none">
+		    <div class="modal-header">Preview
+		        <button class="close" data-dismiss="modal">x</button>
+		    </div>
+			<fieldset name="photo-creation">
+				<div class="modal-body">
+					<img class="photo_img" style="width:100%;height:auto"/>
+					<div id="comments_plugin"></div>
+				</div>
+			</fieldset>
+		</div>
+	
+	    <div class="navbar">
+	        <div class="navbar-inner">
+	            <a class="brand" href="/">Scene</a>
+				<% if (user) { %>
+					<button id="photo_input_button" class="btn btn-primary pull-right">Add Photo</button>
+					<input id="photo_input" class="btn btn-info pull-right hide" type="file" value="add Photo"/>
+	            <% } else { %>
+					<a class="btn btn-info pull-right" href="/auth/facebook">Sign in</a>
+					<!---sign in--->
+				<% } %>
+	        </div>
+	    </div>
+		<div class="event-container">
+			<div class="event-outer">
+				<div class="event">
+				</div>
+			</div>
+		</div>
+		<div id="create_photo_modal" class="modal hide fade">
+		    <div class="modal-header">Preview
+		        <button class="close" data-dismiss="modal">x</button>
+		    </div>
+			<fieldset name="photo-creation">
+				<div class="modal-body">
+					<div class="canvas_container" style="width:100%;height:200px">
+						<canvas id="photo_preview">
+						</canvas>
+					</div>
+					<div style="margin-left:auto;margin-right:auto">
+						<button id="use_photo" class="btn btn-info">Use</button>
+						<button id="cancel_photo" class="btn btn-danger">Cancel</button>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+	</body>
+</html>

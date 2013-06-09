@@ -33,7 +33,7 @@ module.exports = function(app){
 	app.get("/events/:id",Event.middleware.findById,function(req,res){
 		var event = new Event(req.event);
 		event.populatePhotos(function(err,event){
-			res.render("event/index",{
+			res.render("event/index" + (req.useragent.isMobile?"-mobile":""),{
 				user : req.user?req.user:null,
 				event : event
 			});
