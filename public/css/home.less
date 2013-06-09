@@ -24,7 +24,11 @@
             font-size: 15px;
 
             .description {
-                margin-bottom: 10px;
+                margin-bottom: 0;
+
+                &.logged {
+                    margin-bottom: 10px;
+                }
             }
         }
     }
@@ -72,11 +76,37 @@
         font-size: 11px;
 
         .event {
+            .rounded-corners(5px);
             margin-top: 8px;
             text-align: center;
             background-color: white;
             border: 1px solid #DDD;
-            border-radius: 5px;
+        }
+    }
+
+    .spots-container {
+        position: relative;
+
+        .spots {
+            overflow: auto;
+            max-height: 100%;
+
+            .add-spot-container {
+                margin-top: 10px;
+                text-align: center;
+
+                .spot-text {
+                    width: 180px;
+                }
+            }
+
+            .spot {
+                .rounded-corners(5px);
+                border: 1px solid #DDD;
+                margin: 10px 10px 0 10px;
+                background-color: white;
+                text-align: center;
+            }
         }
     }
 }

@@ -111,6 +111,8 @@ window.Scene.HomeController = function () {
             icon: image
         });
 
+        window.Scene.map.setCenter(position);
+
         return marker;
     };
 
@@ -322,6 +324,42 @@ window.Scene.HomeController = function () {
             " ~ " + moment(event.duration.endtime).format("MM/DD h:mma") + "</div>" +
             "<div class='event-location'>" + event.address + "</div></div>";
 
-        $("#sidebar .events").append(markup);
+        $("#sidebar .events").prepend(markup);
+    };
+
+    this.addSpot = function () {
+        if ($(".spot-text").val()) {
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                "address": $(".spot-text").val()
+            }, function (results, status) {
+                if (results) {
+                    var data = {
+                        user: window.Scene.user._id,
+                        spot: {
+                            latitude: results[0].geometry.location.lat(),
+                            longitude: results[0].geometry.location.lng(),
+                            address: results[0].formatted_address
+                        }
+                    };
+
+                    window.socket.emit("User.addSpot", data);
+                }
+            });
+        }
+    };
+
+    this.renderSpot = function (spot) {
+        var spot = spot.spot,
+              markup = "<div class='spot'><a class='spot-address' href='#' data-lat='" + spot.latitude +
+            "' data-lng='" + spot.longitude + "'>" + spot.address + "</a></div>";
+
+        $("#sidebar .spots").prepend(markup);
+    };
+
+    this.centerSpot = function (lat, lng) {
+        var latLng = new google.maps.LatLng(lat, lng);
+
+        window.Scene.map.setCenter(latLng);
     };
 };

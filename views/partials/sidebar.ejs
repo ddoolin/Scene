@@ -13,3 +13,16 @@
         </div>
     <% } %>
 </div>
+<div class="spots-container">
+    <div class="spots hide">
+        <% for (var i = 0; i< user.spots.length; i++) { %>
+            <div class="spot">
+                <a class="spot-address" href="#" data-lat="<%= user.spots[i].latitude %>" data-lng="<%= user.spots[i].longitude %>"><%= user.spots[i].address %></a>
+            </div>
+        <% } %>
+        <div class="add-spot-container">
+            <input type="text" class="spot-text" name="spot-location" title="spot-location" placeholder="New Spot (e.g. Seoul, Korea)" />
+            <button id="add_spot" class="btn">Add Spot</button>
+        </div>
+    </div>
+</div>
